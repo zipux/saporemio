@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SaporeMio — Type Mockups</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Sora:wght@200;300;400;500;600&family=Marcellus&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #E8E4DD; font-family: 'Public Sans', system-ui, sans-serif; }
+  #root { width: 100%; height: 100vh; }
+</style>
+
+<script>
+  try {
+    const k = 'dc-viewport:' + location.pathname;
+    const saved = JSON.parse(localStorage.getItem(k) || 'null');
+    if (!saved || saved.scale >= 0.8) {
+      localStorage.setItem(k, JSON.stringify({ x: 56, y: 56, scale: 0.36 }));
+    }
+  } catch {}
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+
+/* ── Brand tokens ─────────────────────────────────────── */
+const IV    = '#FAF7F2';
+const BK    = '#111111';
+const GD    = '#B08D57';
+const RULE  = 'rgba(17,17,17,0.11)';
+const MUTED = 'rgba(17,17,17,0.52)';
+const FAINT = 'rgba(17,17,17,0.04)';
+
+/* ══════════════════════════════════════════════════════════
+   WEBSITE HERO MOCKUP  —  1440 × 900
+══════════════════════════════════════════════════════════ */
+function WebsiteMockup({ D, DW, T, TW, italic }) {
+  const products = [
+    { cat: "Olio d'Oliva",  name: 'Coratina · Puglia',            price: '€ 32' },
+    { cat: 'Pasta Secca',   name: 'Spaghetti di Gragnano IGP',    price: '€ 8'  },
+    { cat: 'Conserve',      name: 'Passata San Marzano DOP',       price: '€ 12' },
+  ];
+
+  return (
+    <div style={{ width:'100%', height:'100%', background:IV, overflow:'hidden', display:'flex', flexDirection:'column' }}>
+
+      {/* ── Navbar ── */}
+      <nav style={{
+        flex:'0 0 64px', background:BK,
+        display:'flex', alignItems:'center', justifyContent:'space-between',
+        padding:'0 72px',
+      }}>
+        <span style={{ fontFamily:D, fontWeight:DW, fontSize:21, color:IV, letterSpacing:'0.14em', textTransform:'uppercase' }}>
+          Sapore Mio
+        </span>
+        <div style={{ display:'flex', gap:40 }}>
+          {['Shop','About','The Harvest','Trade'].map(l => (
+            <span key={l} style={{ fontFamily:T, fontWeight:400, fontSize:13, color:'rgba(250,247,242,0.55)', letterSpacing:'0.07em' }}>{l}</span>
+          ))}
+        </div>
+      </nav>
+
+      {/* ── Hero ── */}
+      <div style={{ flex:'0 0 588px', display:'flex', gap:56, padding:'64px 72px 0' }}>
+
+        {/* Left — text col */}
+        <div style={{ flex:'0 0 620px', display:'flex', flexDirection:'column' }}>
+          <div style={{ fontFamily:T, fontWeight:400, fontSize:11, letterSpacing:'0.3em', textTransform:'uppercase', color:GD, marginBottom:26 }}>
+            Single-estate · Puglia, Italy
+          </div>
+
+          <h1 style={{
+            fontFamily:D, fontWeight:DW, fontSize:84, lineHeight:0.93,
+            letterSpacing:'-0.022em', color:BK, marginBottom:28,
+          }}>
+            Italian<br/>
+            pantry,<br/>
+            <span style={italic ? { fontStyle:'italic' } : { color:GD }}>
+              without<br/>compromise.
+            </span>
+          </h1>
+
+          <p style={{
+            fontFamily:T, fontWeight:TW, fontSize:17, lineHeight:1.65,
+            color:MUTED, marginBottom:36, maxWidth:450, textWrap:'pretty',
+          }}>
+            Pressed, dried, and preserved within hours of harvest.
+            Sourced from the same family growers each season.
+          </p>
+
+          <div style={{ display:'flex', gap:20, alignItems:'center' }}>
+            <button style={{
+              fontFamily:T, fontWeight:500, fontSize:12,
+              letterSpacing:'0.14em', textTransform:'uppercase',
+              background:BK, color:IV, border:'none', padding:'13px 30px', cursor:'pointer',
+            }}>Shop the selection</button>
+            <span style={{ fontFamily:T, fontWeight:400, fontSize:14, color:MUTED, textDecoration:'underline', textUnderlineOffset:4 }}>
+              Our story →
+            </span>
+          </div>
+        </div>
+
+        {/* Right — product image placeholder */}
+        <div style={{ flex:1, position:'relative' }}>
+          <div style={{
+            position:'absolute', inset:0,
+            background:`repeating-linear-gradient(45deg, rgba(176,141,87,0.06) 0, rgba(176,141,87,0.06) 1px, transparent 1px, transparent 13px)`,
+            border:`1px solid rgba(176,141,87,0.22)`,
+            display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:10,
+          }}>
+            <div style={{ width:40, height:40, borderRadius:'50%', border:'1px solid rgba(176,141,87,0.35)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+              <div style={{ width:12, height:12, borderRadius:'50%', background:'rgba(176,141,87,0.35)' }} />
+            </div>
+            <div style={{ fontFamily:"'Courier New',monospace", fontSize:11, color:'rgba(176,141,87,0.65)', letterSpacing:'0.15em', textTransform:'uppercase' }}>product shot</div>
+            <div style={{ fontFamily:"'Courier New',monospace", fontSize:10, color:'rgba(176,141,87,0.45)', letterSpacing:'0.06em' }}>Coratina · 500 ml</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Product strip ── */}
+      <div style={{ flex:1, padding:'0 72px', display:'flex', flexDirection:'column', justifyContent:'center' }}>
+        <div style={{ height:1, background:RULE, marginBottom:24 }} />
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:18 }}>
+          {products.map(p => (
+            <div key={p.name} style={{ background:FAINT, padding:'18px 22px', display:'flex', flexDirection:'column', gap:5 }}>
+              <div style={{ fontFamily:T, fontWeight:500, fontSize:10, letterSpacing:'0.28em', textTransform:'uppercase', color:GD }}>
+                {p.cat}
+              </div>
+              <div style={{ fontFamily:D, fontWeight:DW, fontSize:22, color:BK, lineHeight:1.1 }}>
+                {p.name}
+              </div>
+              <div style={{ fontFamily:T, fontWeight:400, fontSize:14, color:MUTED, marginTop:3 }}>
+                {p.price}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   PRINTED MENU / CATALOG  —  860 × 1200  (A4-ish portrait)
+══════════════════════════════════════════════════════════ */
+function MenuMockup({ D, DW, T, TW, italic }) {
+  const sections = [
+    { category: "Olio d'Oliva", items: [
+      { name:"Coratina · Puglia",   desc:"Late-harvest single variety. Grassy, peppery finish. Acidity ≤ 0.18%. Cold-pressed same day.", price:"€ 32,00", size:"500 ml" },
+      { name:"Taggiasca · Liguria", desc:"Mild, buttery. Notes of almond, stone fruit, fresh cream. Pressed within 12 hours of harvest.",  price:"€ 38,00", size:"500 ml" },
+    ]},
+    { category: "Pasta Secca", items: [
+      { name:"Spaghetti di Gragnano IGP", desc:"Slow-dried semola di grano duro. Bronze-cut and rough-surfaced for maximum sauce hold.", price:"€ 7,50", size:"500 g" },
+      { name:"Rigatoni alle Trafile",     desc:"Traditional Neapolitan bronze-drawn rigatoni. Porous walls; reliably al dente at 13 min.", price:"€ 7,50", size:"500 g" },
+    ]},
+    { category: "Conserve", items: [
+      { name:"Passata di Pomodoro", desc:"San Marzano DOP, slow-cooked and hand-milled by a single estate in Agro Sarnese. Nothing added.", price:"€ 11,00", size:"660 g" },
+      { name:"Crema di Carciofi",   desc:"Spinoso sardo artichokes, oil-packed and blended to a cream. With crostini, pasta, or a spoon.", price:"€ 14,50", size:"190 g" },
+    ]},
+  ];
+
+  return (
+    <div style={{ width:'100%', height:'100%', background:IV, padding:'60px 68px', overflow:'hidden', display:'flex', flexDirection:'column' }}>
+
+      {/* Header */}
+      <div style={{ textAlign:'center', marginBottom:32 }}>
+        <div style={{ fontFamily:D, fontWeight:DW, fontSize:46, letterSpacing:'0.1em', textTransform:'uppercase', color:BK, lineHeight:1 }}>
+          Sapore Mio
+        </div>
+        <div style={{ fontFamily:T, fontWeight:TW, fontSize:12, letterSpacing:'0.28em', textTransform:'uppercase', color:GD, marginTop:13 }}>
+          Selezione · Primavera 2025
+        </div>
+        <div style={{ width:36, height:1, background:GD, margin:'16px auto 0' }} />
+      </div>
+
+      {/* Intro */}
+      <p style={{
+        fontFamily:T, fontWeight:TW, fontStyle: italic ? 'italic' : 'normal',
+        fontSize:15, lineHeight:1.7, color:MUTED,
+        textAlign:'center', maxWidth:520, margin:'0 auto 28px', textWrap:'pretty',
+      }}>
+        Each product is sourced from a single estate, harvested in-season, and reaches you without preservatives or compromise.
+      </p>
+
+      <div style={{ height:1, background:RULE, marginBottom:28 }} />
+
+      {/* Product sections */}
+      <div style={{ flex:1, display:'flex', flexDirection:'column', gap:26 }}>
+        {sections.map(section => (
+          <div key={section.category}>
+            {/* Section header */}
+            <div style={{ display:'flex', alignItems:'center', gap:14, marginBottom:16 }}>
+              <div style={{ flex:1, height:1, background:RULE }} />
+              <span style={{ fontFamily:D, fontWeight:DW, fontSize:15, letterSpacing:'0.2em', textTransform:'uppercase', color:BK }}>
+                {section.category}
+              </span>
+              <div style={{ flex:1, height:1, background:RULE }} />
+            </div>
+
+            {/* Items */}
+            <div style={{ display:'flex', flexDirection:'column', gap:15 }}>
+              {section.items.map(item => (
+                <div key={item.name} style={{ display:'flex', gap:16, alignItems:'flex-start' }}>
+                  <div style={{ flex:1 }}>
+                    <div style={{ display:'flex', alignItems:'baseline', gap:9, marginBottom:4 }}>
+                      <span style={{
+                        fontFamily:D, fontWeight:DW, fontSize:20, color:BK,
+                        fontStyle: italic ? 'italic' : 'normal',
+                        letterSpacing: italic ? '0' : '0.03em',
+                      }}>{item.name}</span>
+                      <span style={{ fontFamily:T, fontWeight:400, fontSize:10, color:MUTED, letterSpacing:'0.12em', textTransform:'uppercase' }}>
+                        {item.size}
+                      </span>
+                    </div>
+                    <p style={{ fontFamily:T, fontWeight:TW, fontSize:13, lineHeight:1.6, color:MUTED, maxWidth:570, textWrap:'pretty' }}>
+                      {item.desc}
+                    </p>
+                  </div>
+                  <div style={{ fontFamily:D, fontWeight:DW, fontSize:18, color:BK, whiteSpace:'nowrap', marginTop:1 }}>
+                    {item.price}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div style={{
+        marginTop:28, paddingTop:18,
+        borderTop:`1px solid ${RULE}`,
+        display:'flex', justifyContent:'space-between', alignItems:'center',
+      }}>
+        <div style={{ fontFamily:T, fontWeight:400, fontSize:10, color:MUTED, letterSpacing:'0.18em', textTransform:'uppercase' }}>
+          saporemio.com
+        </div>
+        <div style={{ fontFamily:D, fontWeight:DW, fontSize:13, color:MUTED, letterSpacing:'0.08em' }}>
+          Sapore Mio
+        </div>
+        <div style={{ fontFamily:T, fontWeight:400, fontSize:10, color:MUTED, letterSpacing:'0.18em', textTransform:'uppercase' }}>
+          @saporemio
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
+   APP
+══════════════════════════════════════════════════════════ */
+const WEB_W  = 1440;
+const WEB_H  = 900;
+const MENU_W = 860;
+const MENU_H = 1200;
+
+const PAIRINGS = [
+  {
+    id:       'spectral-sora',
+    title:    'Pairing 1 · Spectral Medium + Sora Light',
+    subtitle: 'Titles & headings: Spectral 500  ·  Body text: Sora 300',
+    D: "'Spectral', Georgia, serif",
+    DW: 500,
+    T: "'Sora', system-ui, sans-serif",
+    TW: 300,
+    italic: true,
+  },
+  {
+    id:       'marcellus-public',
+    title:    'Pairing 2 · Marcellus + Public Sans',
+    subtitle: 'Titles & headings: Marcellus 400  ·  Body text: Public Sans 400',
+    D: "'Marcellus', 'Trajan Pro', serif",
+    DW: 400,
+    T: "'Public Sans', system-ui, sans-serif",
+    TW: 400,
+    italic: false,
+  },
+];
+
+function App() {
+  return (
+    <DesignCanvas>
+      {PAIRINGS.map(p => (
+        <DCSection key={p.id} id={p.id} title={p.title} subtitle={p.subtitle}>
+          <DCArtboard id={`web-${p.id}`} label="Website hero" width={WEB_W} height={WEB_H}>
+            <WebsiteMockup D={p.D} DW={p.DW} T={p.T} TW={p.TW} italic={p.italic} />
+          </DCArtboard>
+          <DCArtboard id={`menu-${p.id}`} label="Printed menu · A4" width={MENU_W} height={MENU_H}>
+            <MenuMockup D={p.D} DW={p.DW} T={p.T} TW={p.TW} italic={p.italic} />
+          </DCArtboard>
+        </DCSection>
+      ))}
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

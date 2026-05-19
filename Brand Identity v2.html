@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sapore Mio — Brand Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #E8E4DD; font-family: 'Sora', sans-serif; font-weight: 300; }
+  #root { width: 100%; height: 100vh; }
+</style>
+<script>
+  // Set a zoomed-out initial view so all artboards are visible at once
+  try {
+    const k = 'dc-viewport:' + location.pathname;
+    const saved = JSON.parse(localStorage.getItem(k) || 'null');
+    if (!saved || saved.scale >= 0.9) {
+      localStorage.setItem(k, JSON.stringify({ x: 60, y: 60, scale: 0.58 }));
+    }
+  } catch {}
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+
+/* ─── Brand tokens ─────────────────────────────────────── */
+const IV  = '#FAF7F2'; // ivory
+const BK  = '#111111'; // black
+const GD  = '#B08D57'; // gold
+const GD2 = '#C9A96E'; // light gold
+const GD3 = '#7A5F30'; // deep gold
+
+/* ─── Type system ─────────────────────────────────────── */
+const display = "'Marcellus', 'Trajan Pro', serif";
+const text    = "'Sora', system-ui, sans-serif";
+
+/* ════════════════════════════════════════════════════════
+   OLIVE BRANCH — shared SVG symbol (realistic leaf design)
+════════════════════════════════════════════════════════ */
+
+/*
+  Leaf shape: lanceolate (long narrow olive leaf), pointed at both ends.
+  Local coords: base at (0,0), tip at (18,0), widest ±2.5 at center.
+  Midrib runs the full length. Stroke weight ≥ 0.9 for print safety.
+*/
+function OliveLeaf({ color, sw = 1.0, angle = 0, cx = 0, cy = 0 }) {
+  return (
+    <g transform={`translate(${cx},${cy}) rotate(${angle})`}>
+      {/* Leaf outline — lanceolate, pointed both ends */}
+      <path
+        d="M 0,0 C 2,2.4 12,2.8 18,0 C 12,-2.8 2,-2.4 0,0 Z"
+        stroke={color} strokeWidth={sw} fill="none"
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+      {/* Midrib — central vein */}
+      <line x1="0.5" y1="0" x2="17" y2="0"
+        stroke={color} strokeWidth={sw * 0.45}
+        strokeLinecap="round" opacity="0.7"
+      />
+    </g>
+  );
+}
+
+/* Olive fruit — small realistic oval */
+function OliveFruit({ color, cx, cy, angle = -20, sw = 0.9 }) {
+  return (
+    <ellipse cx={cx} cy={cy} rx={2.8} ry={1.8}
+      transform={`rotate(${angle} ${cx} ${cy})`}
+      stroke={color} strokeWidth={sw * 0.85} fill="none"
+    />
+  );
+}
+
+/*
+  Full branch: stem curves from (0,0) upper-right to ~(68,-28).
+  Leaf pairs alternate above and below the stem.
+  Designed for strokeWidth=1 (prints cleanly at ≥ 15mm wide).
+*/
+function BranchPaths({ color = GD, sw = 1.0 }) {
+  return (
+    <g strokeLinecap="round" strokeLinejoin="round">
+      {/* Main stem */}
+      <path d="M 0,0 C 18,-7 42,-16 68,-28"
+        stroke={color} strokeWidth={sw} fill="none" strokeLinecap="round"/>
+
+      {/* Pair 1 — at stem ~(12,-4) */}
+      <OliveLeaf color={color} sw={sw} cx={12} cy={-4} angle={-65} />
+      <OliveLeaf color={color} sw={sw} cx={13} cy={-3.5} angle={38} />
+
+      {/* Pair 2 — at stem ~(27,-9) */}
+      <OliveLeaf color={color} sw={sw} cx={27} cy={-9} angle={-68} />
+      <OliveLeaf color={color} sw={sw} cx={28} cy={-8.5} angle={42} />
+
+      {/* Pair 3 — at stem ~(46,-18) */}
+      <OliveLeaf color={color} sw={sw} cx={46} cy={-18} angle={-70} />
+      <OliveLeaf color={color} sw={sw} cx={47} cy={-17.5} angle={45} />
+
+      {/* Pair 4 — final tip */}
+      <OliveLeaf color={color} sw={sw} cx={62} cy={-25} angle={-72} />
+      <OliveLeaf color={color} sw={sw} cx={63} cy={-24.5} angle={48} />
+
+      {/* Two fruits near base */}
+      <OliveFruit color={color} cx={18} cy={-5.5} angle={-20} sw={sw} />
+      <OliveFruit color={color} cx={34} cy={-12} angle={15} sw={sw} />
+    </g>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   LOGO VARIANTS
+════════════════════════════════════════════════════════ */
+
+/* ── Logo A: Wordmark + Branch (horizontal lockup) ────── */
+function LogoA() {
+  return (
+    <svg viewBox="0 0 420 92" style={{ width:'100%', height:'auto' }}>
+      <g transform="translate(12,68)">
+        <BranchPaths color={GD} sw={1.1} />
+      </g>
+      <text x="100" y="48" fontFamily={display} fontSize="42" letterSpacing="6.5" fill={BK}>
+        SAPORE MIO
+      </text>
+      <text x="100" y="72" fontFamily={text} fontWeight="300" fontSize="10" letterSpacing="3.8" fill={GD}>
+        SINGLE ESTATE · PUGLIA
+      </text>
+    </svg>
+  );
+}
+
+/* ── Logo B: Stacked wordmark, centered branch ─────────── */
+function LogoB() {
+  return (
+    <svg viewBox="0 0 280 200" style={{ width:'100%', height:'auto' }}>
+      <g transform="translate(106,96)">
+        <BranchPaths color={GD} sw={1.0} />
+      </g>
+      <text x="140" y="135" fontFamily={display} fontSize="52" letterSpacing="7.2" fill={BK} textAnchor="middle">
+        SAPORE
+      </text>
+      <text x="140" y="174" fontFamily={display} fontSize="52" letterSpacing="7.2" fill={BK} textAnchor="middle">
+        MIO
+      </text>
+    </svg>
+  );
+}
+
+/* ── Logo C: Minimal wordmark (no branch) ───────────────── */
+function LogoC() {
+  return (
+    <svg viewBox="0 0 340 68" style={{ width:'100%', height:'auto' }}>
+      <text x="170" y="42" fontFamily={display} fontSize="48" letterSpacing="7" fill={BK} textAnchor="middle">
+        SAPORE MIO
+      </text>
+    </svg>
+  );
+}
+
+/* ── Logo D: Branch-only mark (icon/social profile) ────── */
+function LogoD() {
+  return (
+    <svg viewBox="0 0 90 90" style={{ width:'100%', height:'auto' }}>
+      <g transform="translate(11,59)">
+        <BranchPaths color={GD} sw={1.3} />
+      </g>
+    </svg>
+  );
+}
+
+/* ── Logo E: Inverted (light on dark) ──────────────────── */
+function LogoE() {
+  return (
+    <svg viewBox="0 0 420 92" style={{ width:'100%', height:'auto', background:BK, padding:18 }}>
+      <g transform="translate(12,68)">
+        <BranchPaths color={GD2} sw={1.1} />
+      </g>
+      <text x="100" y="48" fontFamily={display} fontSize="42" letterSpacing="6.5" fill={IV}>
+        SAPORE MIO
+      </text>
+      <text x="100" y="72" fontFamily={text} fontWeight="300" fontSize="10" letterSpacing="3.8" fill={GD2}>
+        SINGLE ESTATE · PUGLIA
+      </text>
+    </svg>
+  );
+}
+
+/* ── Logo F: Gold on ivory (packaging) ─────────────────── */
+function LogoF() {
+  return (
+    <svg viewBox="0 0 280 200" style={{ width:'100%', height:'auto', background:IV, padding:24 }}>
+      <g transform="translate(106,96)">
+        <BranchPaths color={GD} sw={1.0} />
+      </g>
+      <text x="140" y="135" fontFamily={display} fontSize="52" letterSpacing="7.2" fill={GD} textAnchor="middle">
+        SAPORE
+      </text>
+      <text x="140" y="174" fontFamily={display} fontSize="52" letterSpacing="7.2" fill={GD} textAnchor="middle">
+        MIO
+      </text>
+    </svg>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   COLOR PALETTE CARD
+════════════════════════════════════════════════════════ */
+function ColorPalette() {
+  const swatches = [
+    { name: 'Ivory', hex: IV, use: 'Primary bg, light surfaces' },
+    { name: 'Black', hex: BK, use: 'Headings, nav, primary text' },
+    { name: 'Gold', hex: GD, use: 'Accent, logo branch, CTAs' },
+    { name: 'Light Gold', hex: GD2, use: 'Hover states, inverted accent' },
+    { name: 'Deep Gold', hex: GD3, use: 'Dark mode accent, shadows' },
+  ];
+
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:IV, padding:'48px 52px',
+      display:'flex', flexDirection:'column',
+    }}>
+      <h2 style={{ fontFamily:display, fontSize:32, color:BK, letterSpacing:'0.08em', marginBottom:8 }}>
+        Color Palette
+      </h2>
+      <p style={{ fontFamily:text, fontWeight:300, fontSize:15, color:'rgba(17,17,17,0.6)', marginBottom:32 }}>
+        Restrained, warm, built for print and digital
+      </p>
+
+      <div style={{ display:'flex', flexDirection:'column', gap:18, flex:1 }}>
+        {swatches.map(s => (
+          <div key={s.hex} style={{ display:'flex', gap:20, alignItems:'center' }}>
+            <div style={{
+              width:88, height:88, background:s.hex,
+              border: s.hex === IV ? '1px solid rgba(17,17,17,0.12)' : 'none',
+              borderRadius:6,
+            }} />
+            <div style={{ flex:1 }}>
+              <div style={{ fontFamily:display, fontSize:20, color:BK, letterSpacing:'0.06em' }}>
+                {s.name}
+              </div>
+              <div style={{ fontFamily:"'Courier New',monospace", fontSize:13, color:'rgba(17,17,17,0.5)', marginTop:3 }}>
+                {s.hex}
+              </div>
+              <div style={{ fontFamily:text, fontWeight:300, fontSize:13, color:'rgba(17,17,17,0.6)', marginTop:6 }}>
+                {s.use}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   TYPE SPECIMEN CARD
+════════════════════════════════════════════════════════ */
+function TypeSpecimen() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:IV, padding:'48px 52px',
+      display:'flex', flexDirection:'column',
+    }}>
+      <h2 style={{ fontFamily:display, fontSize:32, color:BK, letterSpacing:'0.08em', marginBottom:8 }}>
+        Typography
+      </h2>
+      <p style={{ fontFamily:text, fontWeight:300, fontSize:15, color:'rgba(17,17,17,0.6)', marginBottom:28 }}>
+        Marcellus (display) + Sora Light (text)
+      </p>
+
+      {/* Display */}
+      <div style={{ marginBottom:32 }}>
+        <div style={{ fontFamily:text, fontWeight:500, fontSize:10, letterSpacing:'0.26em', textTransform:'uppercase', color:GD, marginBottom:10 }}>
+          Display · Marcellus Regular
+        </div>
+        <div style={{ fontFamily:display, fontSize:52, color:BK, letterSpacing:'0.05em', lineHeight:1.1 }}>
+          SAPORE MIO
+        </div>
+        <div style={{ fontFamily:display, fontSize:28, color:BK, letterSpacing:'0.04em', marginTop:12 }}>
+          Olio extra vergine d'oliva
+        </div>
+        <div style={{ fontFamily:display, fontSize:16, color:'rgba(17,17,17,0.65)', letterSpacing:'0.12em', marginTop:10 }}>
+          ABCDEFGHIJKLMNOPQRSTUVWXYZ
+        </div>
+        <div style={{ fontFamily:display, fontSize:16, color:'rgba(17,17,17,0.65)', letterSpacing:'0.06em' }}>
+          abcdefghijklmnopqrstuvwxyz · 0123456789
+        </div>
+        <div style={{ fontFamily:display, fontSize:16, color:GD, letterSpacing:'0.04em', marginTop:6 }}>
+          à è é ì ò ù &amp;
+        </div>
+      </div>
+
+      {/* Body */}
+      <div>
+        <div style={{ fontFamily:text, fontWeight:500, fontSize:10, letterSpacing:'0.26em', textTransform:'uppercase', color:GD, marginBottom:10 }}>
+          Text · Sora Light (300)
+        </div>
+        <p style={{ fontFamily:text, fontWeight:300, fontSize:18, color:BK, lineHeight:1.65, maxWidth:520, textWrap:'pretty', marginBottom:14 }}>
+          Pressed within hours of harvest in the hills of Bitonto, this olio carries the slow bitterness of late-summer Coratina — grassy, peppery, finished with a clean almond note.
+        </p>
+        <p style={{ fontFamily:text, fontWeight:300, fontSize:14, color:'rgba(17,17,17,0.6)', lineHeight:1.6, maxWidth:520 }}>
+          Smaller body copy at 14px · Used for captions, ingredient lists, provenance notes. Available weights: 200 (extralight), 300 (light), 400 (regular), 500 (medium), 600 (semibold).
+        </p>
+        <div style={{ fontFamily:text, fontWeight:300, fontSize:15, color:'rgba(17,17,17,0.65)', letterSpacing:'0.03em', marginTop:12 }}>
+          AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz
+        </div>
+        <div style={{ fontFamily:text, fontWeight:300, fontSize:15, color:GD, marginTop:6 }}>
+          à è é ì ò ù · 0123456789 &amp; € $ %
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   USAGE GUIDE CARD
+════════════════════════════════════════════════════════ */
+function UsageGuide() {
+  const guidelines = [
+    { label: 'Clear space', rule: 'Minimum 1× the height of the branch on all sides' },
+    { label: 'Minimum size', rule: 'Logo A: 100mm wide (print) / 260px (digital)' },
+    { label: 'Backgrounds', rule: 'Use ivory/white for primary logo. Black or deep imagery for inverted (Logo E).' },
+    { label: 'Typography scale', rule: 'Headlines: Marcellus 28–72px · Body: Sora Light 14–18px · Captions: Sora Light 11–13px' },
+    { label: 'No italics caveat', rule: 'Marcellus has no italic variant. Use Sora italic for body emphasis, or switch to gold for display emphasis.' },
+  ];
+
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:BK, padding:'48px 52px', color:IV,
+      display:'flex', flexDirection:'column',
+    }}>
+      <h2 style={{ fontFamily:display, fontSize:32, color:IV, letterSpacing:'0.08em', marginBottom:8 }}>
+        Usage Guidelines
+      </h2>
+      <p style={{ fontFamily:text, fontWeight:300, fontSize:15, color:'rgba(250,247,242,0.6)', marginBottom:28 }}>
+        Essential rules for consistent application
+      </p>
+
+      <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
+        {guidelines.map((g, i) => (
+          <div key={i} style={{ borderLeft:`2px solid ${GD}`, paddingLeft:18 }}>
+            <div style={{ fontFamily:text, fontWeight:500, fontSize:11, letterSpacing:'0.24em', textTransform:'uppercase', color:GD2, marginBottom:6 }}>
+              {g.label}
+            </div>
+            <div style={{ fontFamily:text, fontWeight:300, fontSize:15, lineHeight:1.55, color:IV }}>
+              {g.rule}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ marginTop:'auto', paddingTop:28, borderTop:'1px solid rgba(250,247,242,0.15)' }}>
+        <div style={{ fontFamily:text, fontWeight:300, fontSize:12, color:'rgba(250,247,242,0.5)', lineHeight:1.6 }}>
+          For developer handoff or print specifications, see the Tech Spec card.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   TECH SPEC CARD (code-ready font embed + CSS)
+════════════════════════════════════════════════════════ */
+function TechSpec() {
+  const htmlEmbed = `<!-- Paste in <head> of HTML or theme.liquid -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@200;300;400;500;600&display=swap" rel="stylesheet">`;
+
+  const cssVars = `/* CSS variables */
+:root {
+  --font-display: 'Marcellus', 'Trajan Pro', serif;
+  --font-text: 'Sora', system-ui, sans-serif;
+  
+  --color-ivory: #FAF7F2;
+  --color-black: #111111;
+  --color-gold: #B08D57;
+  --color-gold-light: #C9A96E;
+  --color-gold-deep: #7A5F30;
+}`;
+
+  const cssClasses = `/* Base styles */
+body {
+  font-family: var(--font-text);
+  font-weight: 300;
+  color: var(--color-black);
+  background: var(--color-ivory);
+}
+
+h1, h2, h3, .heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+/* Recommended scale */
+h1 { font-size: 52px; }
+h2 { font-size: 36px; }
+h3 { font-size: 24px; }
+p { font-size: 16px; line-height: 1.65; }
+.caption { font-size: 12px; font-weight: 300; }`;
+
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:'#1a1a1a', padding:'44px 48px', color:'#e8e8e8',
+      display:'flex', flexDirection:'column', gap:26, fontFamily:"'Courier New', monospace",
+    }}>
+      <div>
+        <h2 style={{ fontFamily:display, fontSize:28, color:'#fff', letterSpacing:'0.06em', marginBottom:6 }}>
+          Tech Spec
+        </h2>
+        <p style={{ fontFamily:text, fontWeight:300, fontSize:13, color:'rgba(255,255,255,0.55)' }}>
+          Copy-paste font embed + starter CSS
+        </p>
+      </div>
+
+      {/* HTML embed */}
+      <div>
+        <div style={{ fontFamily:text, fontWeight:500, fontSize:10, letterSpacing:'0.22em', textTransform:'uppercase', color:GD2, marginBottom:8 }}>
+          HTML · Google Fonts CDN
+        </div>
+        <pre style={{
+          background:'#0d0d0d', padding:'16px 18px', borderRadius:6,
+          fontSize:11, lineHeight:1.6, color:'#d4d4d4', overflow:'auto', border:'1px solid rgba(255,255,255,0.08)',
+        }}>{htmlEmbed}</pre>
+      </div>
+
+      {/* CSS vars */}
+      <div>
+        <div style={{ fontFamily:text, fontWeight:500, fontSize:10, letterSpacing:'0.22em', textTransform:'uppercase', color:GD2, marginBottom:8 }}>
+          CSS · Variables
+        </div>
+        <pre style={{
+          background:'#0d0d0d', padding:'16px 18px', borderRadius:6,
+          fontSize:11, lineHeight:1.6, color:'#d4d4d4', overflow:'auto', border:'1px solid rgba(255,255,255,0.08)',
+        }}>{cssVars}</pre>
+      </div>
+
+      {/* CSS classes */}
+      <div>
+        <div style={{ fontFamily:text, fontWeight:500, fontSize:10, letterSpacing:'0.22em', textTransform:'uppercase', color:GD2, marginBottom:8 }}>
+          CSS · Base styles
+        </div>
+        <pre style={{
+          background:'#0d0d0d', padding:'16px 18px', borderRadius:6,
+          fontSize:11, lineHeight:1.6, color:'#d4d4d4', overflow:'auto', border:'1px solid rgba(255,255,255,0.08)',
+        }}>{cssClasses}</pre>
+      </div>
+
+      <div style={{ marginTop:'auto', paddingTop:18, borderTop:'1px solid rgba(255,255,255,0.1)' }}>
+        <div style={{ fontFamily:text, fontWeight:300, fontSize:11, color:'rgba(255,255,255,0.45)', lineHeight:1.6 }}>
+          Both fonts free commercial use (SIL Open Font License)<br/>
+          Download .ttf files: fonts.google.com/specimen/Marcellus · fonts.google.com/specimen/Sora
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   APP
+════════════════════════════════════════════════════════ */
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection
+        id="logos"
+        title="Logo System"
+        subtitle="Six variants — horizontal lockup, stacked, minimal, icon, inverted, packaging"
+      >
+        <DCArtboard id="logo-a" label="A · Horizontal lockup" width={520} height={180}>
+          <div style={{ width:'100%', height:'100%', background:IV, display:'flex', alignItems:'center', justifyContent:'center', padding:32 }}>
+            <LogoA />
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="logo-b" label="B · Stacked" width={380} height={320}>
+          <div style={{ width:'100%', height:'100%', background:IV, display:'flex', alignItems:'center', justifyContent:'center', padding:32 }}>
+            <LogoB />
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="logo-c" label="C · Minimal wordmark" width={440} height={140}>
+          <div style={{ width:'100%', height:'100%', background:IV, display:'flex', alignItems:'center', justifyContent:'center', padding:28 }}>
+            <LogoC />
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="logo-d" label="D · Icon (social)" width={200} height={200}>
+          <div style={{ width:'100%', height:'100%', background:IV, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}>
+            <LogoD />
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="logo-e" label="E · Inverted (dark bg)" width={520} height={180}>
+          <div style={{ width:'100%', height:'100%', background:'#0a0a0a', display:'flex', alignItems:'center', justifyContent:'center', padding:0 }}>
+            <LogoE />
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="logo-f" label="F · Gold on ivory (pkg)" width={380} height={320}>
+          <div style={{ width:'100%', height:'100%', background:'#e8e4dc', display:'flex', alignItems:'center', justifyContent:'center', padding:0 }}>
+            <LogoF />
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection
+        id="foundation"
+        title="Foundation"
+        subtitle="Color palette, typography specimen, usage rules, tech spec"
+      >
+        <DCArtboard id="colors" label="Color Palette" width={560} height={720}>
+          <ColorPalette />
+        </DCArtboard>
+
+        <DCArtboard id="type" label="Typography" width={680} height={720}>
+          <TypeSpecimen />
+        </DCArtboard>
+
+        <DCArtboard id="usage" label="Usage Guidelines" width={620} height={640}>
+          <UsageGuide />
+        </DCArtboard>
+
+        <DCArtboard id="tech" label="Tech Spec (code)" width={780} height={840}>
+          <TechSpec />
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

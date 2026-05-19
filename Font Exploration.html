@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SaporeMio — Type Exploration</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;0,6..96,800;1,6..96,400&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400&family=Public+Sans:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=Sora:wght@300;400;500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #E8E4DD; font-family: 'Manrope', system-ui, sans-serif; }
+  #root { width: 100%; height: 100vh; }
+</style>
+
+<script>
+  // Default a zoomed-out view so all six cards are visible
+  try {
+    const k = 'dc-viewport:' + location.pathname;
+    const saved = JSON.parse(localStorage.getItem(k) || 'null');
+    if (!saved || saved.scale >= 0.9) {
+      localStorage.setItem(k, JSON.stringify({ x: 60, y: 60, scale: 0.45 }));
+    }
+  } catch {}
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+
+/* ──────────────────────────────────────────────────────────
+   Brand tokens (carried over from Brand Identity.html)
+─────────────────────────────────────────────────────────── */
+const IV  = '#FAF7F2'; // ivory
+const BK  = '#111111'; // black
+const GD  = '#B08D57'; // gold
+const RULE = 'rgba(17,17,17,0.12)';
+const MUTED = 'rgba(17,17,17,0.55)';
+
+/* ──────────────────────────────────────────────────────────
+   Specimen card  — one type pairing per artboard
+─────────────────────────────────────────────────────────── */
+function Specimen({
+  letter, mood,
+  displayFont, displayWeight = 400, displayItalicSample,
+  textFont, textWeight = 400,
+  displayName, textName,
+  source,
+  letterSpacing = '-0.02em',
+  rationale,
+  tags,
+  wordmarkSize = 168,
+}) {
+  return (
+    <div style={{
+      width: '100%', height: '100%', background: IV, color: BK,
+      padding: '64px 64px 56px', position: 'relative',
+      display: 'flex', flexDirection: 'column',
+    }}>
+      {/* Top meta row */}
+      <div style={{
+        display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+        fontFamily: textFont, fontWeight: 500, fontSize: 13,
+        letterSpacing: '0.18em', textTransform: 'uppercase', color: MUTED,
+      }}>
+        <span>Pairing {letter}</span>
+        <span>SaporeMio · Type study</span>
+      </div>
+      <div style={{ height: 1, background: RULE, marginTop: 18 }} />
+
+      {/* Mood line */}
+      <div style={{
+        fontFamily: textFont, fontWeight: 400, fontSize: 18,
+        color: BK, marginTop: 22, letterSpacing: '0.01em',
+      }}>{mood}</div>
+
+      {/* Wordmark */}
+      <div style={{
+        marginTop: 44, fontFamily: displayFont, fontWeight: displayWeight,
+        fontSize: wordmarkSize, lineHeight: 0.92, letterSpacing,
+        color: BK,
+      }}>
+        Sapore<br/>
+        <span style={{ fontStyle: displayItalicSample ? 'italic' : 'normal' }}>Mio</span>
+      </div>
+
+      {/* Italian phrase with accents */}
+      <div style={{
+        marginTop: 40, fontFamily: displayFont, fontWeight: displayWeight,
+        fontSize: 38, lineHeight: 1.18, letterSpacing: '-0.005em',
+        color: BK, fontStyle: 'italic',
+      }}>
+        Olio extra vergine d&rsquo;oliva — Puglia, raccolta 2025
+      </div>
+
+      <div style={{ height: 1, background: RULE, marginTop: 36 }} />
+
+      {/* Two columns: display alphabet · body sample */}
+      <div style={{
+        marginTop: 28, display: 'grid',
+        gridTemplateColumns: '1fr 1fr', gap: 48, flex: 1, minHeight: 0,
+      }}>
+        {/* Display alphabet + accents */}
+        <div>
+          <Eyebrow textFont={textFont}>Display · {displayName}</Eyebrow>
+          <div style={{
+            marginTop: 14, fontFamily: displayFont, fontWeight: displayWeight,
+            fontSize: 34, lineHeight: 1.05, letterSpacing: '-0.005em',
+          }}>
+            ABCDEFGHIJKLM<br/>
+            NOPQRSTUVWXYZ<br/>
+            abcdefghijklm<br/>
+            nopqrstuvwxyz<br/>
+            <span style={{ color: GD }}>à&nbsp;è&nbsp;é&nbsp;ì&nbsp;ò&nbsp;ù&nbsp;&amp;</span>
+          </div>
+        </div>
+
+        {/* Body sample */}
+        <div>
+          <Eyebrow textFont={textFont}>Text · {textName}</Eyebrow>
+          <p style={{
+            marginTop: 14, fontFamily: textFont, fontWeight: textWeight,
+            fontSize: 19, lineHeight: 1.55, letterSpacing: '0.005em',
+            color: BK, maxWidth: 460, textWrap: 'pretty',
+          }}>
+            Pressed within hours of harvest in the hills of Bitonto, this olio
+            carries the slow bitterness of late-summer Coratina &mdash; grassy,
+            peppery, finished with a clean almond note. Decant generously over
+            burrata, white beans, or a thick crust of country bread.
+          </p>
+
+          {/* Hierarchy mini-spec */}
+          <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <Row textFont={textFont} label="Eyebrow" style={{
+              fontFamily: textFont, fontWeight: 500, fontSize: 12,
+              letterSpacing: '0.22em', textTransform: 'uppercase', color: MUTED,
+            }}>Single estate · 500ml</Row>
+            <Row textFont={textFont} label="Price" style={{
+              fontFamily: displayFont, fontWeight: displayWeight, fontSize: 28, color: BK,
+            }}>€ 32,00</Row>
+            <Row textFont={textFont} label="Caption" style={{
+              fontFamily: textFont, fontWeight: 400, fontSize: 13,
+              color: MUTED, lineHeight: 1.45,
+            }}>Cold-pressed · DOP Terra di Bari · Acidity ≤ 0.18%</Row>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer · rationale + meta */}
+      <div style={{ marginTop: 36, paddingTop: 22, borderTop: `1px solid ${RULE}` }}>
+        <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+          <div style={{ flex: 1 }}>
+            <Eyebrow textFont={textFont}>Why this works</Eyebrow>
+            <p style={{
+              marginTop: 10, fontFamily: textFont, fontWeight: 400,
+              fontSize: 15, lineHeight: 1.5, color: BK, textWrap: 'pretty',
+              maxWidth: 720,
+            }}>{rationale}</p>
+          </div>
+          <div style={{
+            fontFamily: textFont, fontSize: 12, color: MUTED,
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+            textAlign: 'right', minWidth: 160, lineHeight: 1.7,
+          }}>
+            {tags.map(t => <div key={t}>{t}</div>)}
+            <div style={{ marginTop: 8 }}>{source}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Eyebrow({ children, textFont }) {
+  return (
+    <div style={{
+      fontFamily: textFont, fontWeight: 500, fontSize: 11,
+      letterSpacing: '0.24em', textTransform: 'uppercase', color: MUTED,
+    }}>{children}</div>
+  );
+}
+
+function Row({ label, children, style, textFont }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', gap: 16 }}>
+      <div style={{
+        flex: '0 0 70px',
+        fontFamily: textFont, fontWeight: 500, fontSize: 10,
+        letterSpacing: '0.22em', textTransform: 'uppercase', color: MUTED,
+      }}>{label}</div>
+      <div style={style}>{children}</div>
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────
+   App
+─────────────────────────────────────────────────────────── */
+const W = 1080;
+const H = 1480;
+
+function App() {
+  return (
+    <DesignCanvas>
+      <DCSection
+        id="type"
+        title="Six type directions for SaporeMio"
+        subtitle="Premium pantry · modern minimal · quietly luxurious · subtly Italian. All families free for commercial use."
+      >
+        {/* A · Editorial sharp ────────────────────────────────── */}
+        <DCArtboard id="instrument" label="A · Editorial sharp" width={W} height={H}>
+          <Specimen
+            letter="A"
+            mood="A tall, narrow editorial serif paired with a neutral humanist sans. Reads like a contemporary art-book monograph — confident, restrained, never folkloric."
+            displayFont="'Instrument Serif', Georgia, serif"
+            displayWeight={400}
+            displayItalicSample
+            textFont="'Manrope', system-ui, sans-serif"
+            textWeight={400}
+            displayName="Instrument Serif Regular"
+            textName="Manrope Regular"
+            source="Google Fonts · open source"
+            rationale="Instrument Serif (drawn by Rodrigo Fuenzalida for Instrument design studio) has the high-contrast cut of editorial faces like PP Editorial New or Reckless, with a slightly softer ductus that flatters on a glass bottle. The italic is unusually beautiful for a free face. Manrope handles long text quietly underneath."
+            tags={['High contrast', 'Editorial', 'Italic-led']}
+            wordmarkSize={188}
+            letterSpacing="-0.02em"
+          />
+        </DCArtboard>
+
+        {/* B · Roman heritage ─────────────────────────────────── */}
+        <DCArtboard id="marcellus" label="B · Roman heritage" width={W} height={H}>
+          <Specimen
+            letter="B"
+            mood="Inscriptional Roman capitals paired with a humanist sans. The most overtly 'Italian' option — yet it whispers via stone-cut letterforms, not flourishes."
+            displayFont="'Marcellus', 'Trajan Pro', serif"
+            displayWeight={400}
+            displayItalicSample={false}
+            textFont="'Manrope', system-ui, sans-serif"
+            textWeight={400}
+            displayName="Marcellus Regular"
+            textName="Manrope Regular"
+            source="Google Fonts · open source"
+            rationale="Marcellus descends from Roman trajan capitals — the same lineage as inscriptions on the Forum. Used quietly at large size, it anchors the brand in classical Italy without any cliché. Manrope is a humanist neo-grotesk with friendly proportions for long product copy."
+            tags={['Classical', 'Inscriptional', 'Quiet luxury']}
+            wordmarkSize={150}
+            letterSpacing="0.01em"
+          />
+        </DCArtboard>
+
+        {/* C · Italian classic, rethought ──────────────────────── */}
+        <DCArtboard id="bodoni" label="C · Italian classic" width={W} height={H}>
+          <Specimen
+            letter="C"
+            mood="Bodoni — born in Parma, 1798 — given a contemporary digital cut and paired with a precise modern sans. Direct lineage to Italy without the trattoria handshake."
+            displayFont="'Bodoni Moda', Didot, serif"
+            displayWeight={500}
+            displayItalicSample
+            textFont="'IBM Plex Sans', system-ui, sans-serif"
+            textWeight={400}
+            displayName="Bodoni Moda 500"
+            textName="IBM Plex Sans Regular"
+            source="Google Fonts · open source"
+            rationale="Bodoni Moda is a careful 2020 revival with optical sizes — the thin-thick contrast feels couture, not fashion-magazine, when set at restrained sizes. IBM Plex's slightly mechanical sans offsets the high contrast with technical credibility — useful for ingredient lists and provenance text."
+            tags={['Didone', 'High contrast', 'Italian-born']}
+            wordmarkSize={172}
+            letterSpacing="-0.015em"
+          />
+        </DCArtboard>
+
+        {/* D · Warm editorial ─────────────────────────────────── */}
+        <DCArtboard id="newsreader" label="D · Warm editorial" width={W} height={H}>
+          <Specimen
+            letter="D"
+            mood="A garalde-inspired text serif scaled up as display, paired with a quietly neutral sans. The most 'human' option — warmer, bookish, with editorial italics."
+            displayFont="'Newsreader', Georgia, serif"
+            displayWeight={500}
+            displayItalicSample
+            textFont="'Public Sans', system-ui, sans-serif"
+            textWeight={400}
+            displayName="Newsreader Medium"
+            textName="Public Sans Regular"
+            source="Google Fonts · open source"
+            rationale="Newsreader (Production Type, 2020) was drawn for digital reading — open counters, generous italics, a touch of warmth without the over-stylized fashion-y feel. Public Sans is a quiet neo-grotesk that disappears in long copy. The pairing reads more like a slow-food zine than a luxury label, which can be a strength for storytelling."
+            tags={['Warm', 'Bookish', 'Storytelling']}
+            wordmarkSize={170}
+            letterSpacing="-0.015em"
+          />
+        </DCArtboard>
+
+        {/* E · Monolithic sans ────────────────────────────────── */}
+        <DCArtboard id="sora" label="E · Monolithic sans" width={W} height={H}>
+          <Specimen
+            letter="E"
+            mood="No serif at all. One sans family used across the brand at confident weight contrasts. The most contemporary, minimal direction — think Aesop, Studio Nicholson, COS."
+            displayFont="'Sora', system-ui, sans-serif"
+            displayWeight={500}
+            displayItalicSample={false}
+            textFont="'Sora', system-ui, sans-serif"
+            textWeight={300}
+            displayName="Sora Medium"
+            textName="Sora Light"
+            source="Google Fonts · open source"
+            rationale="Letting one well-drawn sans carry display and text is the quietest, most modern move available. Sora is a contemporary geometric sans with restrained details — its even color and tight rhythm read luxurious at any weight. Italian-ness comes through color, photography, and copy voice instead of letterforms."
+            tags={['Single family', 'Minimal', 'Modernist']}
+            wordmarkSize={176}
+            letterSpacing="-0.035em"
+          />
+        </DCArtboard>
+
+        {/* F · Contemporary humanist ──────────────────────────── */}
+        <DCArtboard id="spectral" label="F · Contemporary humanist" width={W} height={H}>
+          <Specimen
+            letter="F"
+            mood="A contemporary humanist serif with crisp wedge-shaped serifs paired with a clean geometric sans. The most distinctive, design-forward pairing — newer brands like Graza, Fly By Jing live here."
+            displayFont="'Spectral', Georgia, serif"
+            displayWeight={500}
+            displayItalicSample
+            textFont="'Plus Jakarta Sans', system-ui, sans-serif"
+            textWeight={400}
+            displayName="Spectral Medium"
+            textName="Plus Jakarta Sans Regular"
+            source="Google Fonts · open source"
+            rationale="Spectral (Production Type, 2017) was commissioned by Google as an editorial workhorse — wedge serifs, sharp italics, and a slight rationalist temperament that feels current without trying. Plus Jakarta Sans is a geometric humanist sans with a touch more warmth than Inter or Manrope, balancing Spectral's precision."
+            tags={['Distinctive', 'Modern', 'Design-forward']}
+            wordmarkSize={172}
+            letterSpacing="-0.02em"
+          />
+        </DCArtboard>
+      </DCSection>
+
+      {/* Decision-helper section ───────────────────────────────── */}
+      <DCSection
+        id="picker"
+        title="How to choose"
+        subtitle="A few lenses to help you triangulate."
+      >
+        <DCArtboard id="guide" label="Decision guide" width={1620} height={820}>
+          <Guide />
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+function Guide() {
+  const cell = {
+    padding: '28px 28px',
+    borderRight: `1px solid ${RULE}`,
+    display: 'flex', flexDirection: 'column', gap: 12,
+  };
+  const last = { ...cell, borderRight: 'none' };
+  const h = {
+    fontFamily: "'Manrope', sans-serif", fontWeight: 500, fontSize: 12,
+    letterSpacing: '0.22em', textTransform: 'uppercase', color: MUTED,
+  };
+  const big = {
+    fontFamily: "'Manrope', sans-serif", fontWeight: 500, fontSize: 22,
+    lineHeight: 1.25, color: BK, textWrap: 'pretty',
+  };
+  const p = {
+    fontFamily: "'Manrope', sans-serif", fontWeight: 400, fontSize: 15,
+    lineHeight: 1.55, color: BK, textWrap: 'pretty',
+  };
+
+  return (
+    <div style={{ width: '100%', height: '100%', background: IV, color: BK,
+      padding: '56px 56px 48px', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <div style={{ fontFamily: "'Marcellus', serif", fontSize: 44, letterSpacing: '0.005em' }}>
+          Which lane?
+        </div>
+        <div style={{
+          fontFamily: "'Manrope', sans-serif", fontWeight: 500, fontSize: 13,
+          letterSpacing: '0.18em', textTransform: 'uppercase', color: MUTED,
+        }}>
+          SaporeMio · Type strategy
+        </div>
+      </div>
+      <div style={{ height: 1, background: RULE, marginTop: 22 }} />
+
+      <div style={{
+        marginTop: 28, flex: 1,
+        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', borderTop: `1px solid ${RULE}`, borderBottom: `1px solid ${RULE}`,
+      }}>
+        <div style={cell}>
+          <div style={h}>If you want…</div>
+          <div style={big}>Most editorial, fashion-forward</div>
+          <div style={p}><b>A · Erode</b> for the catalog-feel. <b>C · Bodoni Moda</b> if Italian heritage matters more than novelty.</div>
+        </div>
+        <div style={cell}>
+          <div style={h}>If you want…</div>
+          <div style={big}>Quiet luxury, gallery silence</div>
+          <div style={p}><b>B · Marcellus</b> for whispered Roman heritage. <b>E · Switzer-only</b> for pure modernist restraint.</div>
+        </div>
+        <div style={last}>
+          <div style={h}>If you want…</div>
+          <div style={big}>Distinctive, design-forward, newer</div>
+          <div style={p}><b>F · Bespoke Serif</b> for a signature letterform. <b>D · Newsreader</b> if storytelling matters most.</div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 36, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48 }}>
+        <div>
+          <div style={h}>My recommendation</div>
+          <div style={{ ...big, marginTop: 10 }}>
+            For a premium <i>pantry</i> brand — one that lives mostly on a bottle and a website, not a menu — I lean toward&nbsp;
+            <b>B · Marcellus + Manrope</b> or <b>E · Switzer-only</b>.
+          </div>
+          <div style={{ ...p, marginTop: 12 }}>
+            Both age slowly, both leave room for photography and ingredients to do the talking, and both avoid the "fancy serif" arms race every olive-oil brand is currently in. If you want one safe, distinctive pick: <b>B</b>.
+          </div>
+        </div>
+        <div>
+          <div style={h}>Next moves</div>
+          <ul style={{ ...p, marginTop: 10, paddingLeft: 18 }}>
+            <li>Pick two finalists — I'll mock packaging + a homepage hero in each so you can see them in product.</li>
+            <li>If the brand will expand to recipe content, weight option D (storytelling) higher.</li>
+            <li>If you ever want a commercial upgrade path: Instrument Serif → PP Editorial New, Sora → Söhne, Spectral → GT Sectra.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

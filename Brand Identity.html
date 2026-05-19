@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sapore Mio — Brand Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700&family=Josefin+Sans:wght@100;300;400&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #E8E4DD; font-family: 'DM Sans', sans-serif; }
+  #root { width: 100%; height: 100vh; }
+</style>
+<script>
+  // Set a zoomed-out initial view so all logo artboards are visible at once
+  try {
+    const k = 'dc-viewport:' + location.pathname;
+    const saved = JSON.parse(localStorage.getItem(k) || 'null');
+    // If no saved state, or saved at scale ≥ 0.9 (too zoomed in), reset to overview
+    if (!saved || saved.scale >= 0.9) {
+      localStorage.setItem(k, JSON.stringify({ x: 60, y: 60, scale: 0.58 }));
+    }
+  } catch {}
+</script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel">
+
+/* ─── Brand tokens ─────────────────────────────────────── */
+const IV  = '#FAF7F2'; // ivory
+const BK  = '#111111'; // black
+const GD  = '#B08D57'; // gold
+const GD2 = '#C9A96E'; // light gold
+const GD3 = '#7A5F30'; // deep gold
+
+/* ─── Shared artboard styles ────────────────────────────── */
+const serif  = "'Cormorant Garamond', Georgia, serif";
+const sans   = "'DM Sans', sans-serif";
+
+/* ════════════════════════════════════════════════════════
+   OLIVE BRANCH — shared SVG symbol (realistic leaf design)
+════════════════════════════════════════════════════════ */
+
+/*
+  Leaf shape: lanceolate (long narrow olive leaf), pointed at both ends.
+  Local coords: base at (0,0), tip at (18,0), widest ±2.5 at center.
+  Midrib runs the full length. Stroke weight ≥ 0.9 for print safety.
+*/
+function OliveLeaf({ color, sw = 1.0, angle = 0, cx = 0, cy = 0 }) {
+  return (
+    <g transform={`translate(${cx},${cy}) rotate(${angle})`}>
+      {/* Leaf outline — lanceolate, pointed both ends */}
+      <path
+        d="M 0,0 C 2,2.4 12,2.8 18,0 C 12,-2.8 2,-2.4 0,0 Z"
+        stroke={color} strokeWidth={sw} fill="none"
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+      {/* Midrib — central vein */}
+      <line x1="0.5" y1="0" x2="17" y2="0"
+        stroke={color} strokeWidth={sw * 0.45}
+        strokeLinecap="round" opacity="0.7"
+      />
+    </g>
+  );
+}
+
+/* Olive fruit — small realistic oval */
+function OliveFruit({ color, cx, cy, angle = -20, sw = 0.9 }) {
+  return (
+    <ellipse cx={cx} cy={cy} rx={2.8} ry={1.8}
+      transform={`rotate(${angle} ${cx} ${cy})`}
+      stroke={color} strokeWidth={sw * 0.85} fill="none"
+    />
+  );
+}
+
+/*
+  Full branch: stem curves from (0,0) upper-right to ~(68,-28).
+  Leaf pairs alternate above and below the stem.
+  Designed for strokeWidth=1 (prints cleanly at ≥ 15mm wide).
+*/
+function BranchPaths({ color = GD, sw = 1.0 }) {
+  return (
+    <g strokeLinecap="round" strokeLinejoin="round">
+      {/* Main stem */}
+      <path d="M 0,0 C 18,-7 42,-16 68,-28"
+        stroke={color} strokeWidth={sw} fill="none" strokeLinecap="round"/>
+
+      {/* Pair 1 — at stem ~(12,-4) */}
+      <OliveLeaf color={color} sw={sw} cx={12} cy={-4} angle={-65} />
+      <OliveLeaf color={color} sw={sw} cx={13} cy={-3.5} angle={38} />
+
+      {/* Pair 2 — at stem ~(27,-9) */}
+      <OliveLeaf color={color} sw={sw} cx={27} cy={-9} angle={-68} />
+      <OliveLeaf color={color} sw={sw} cx={28} cy={-8.5} angle={35} />
+
+      {/* Pair 3 — at stem ~(43,-16) */}
+      <OliveLeaf color={color} sw={sw} cx={43} cy={-16} angle={-70} />
+      <OliveLeaf color={color} sw={sw} cx={44} cy={-15.5} angle={33} />
+
+      {/* Pair 4 — at stem ~(58,-23) */}
+      <OliveLeaf color={color} sw={sw} cx={58} cy={-23} angle={-72} />
+      <OliveLeaf color={color} sw={sw} cx={59} cy={-22.5} angle={31} />
+
+      {/* Two olives along the stem */}
+      <OliveFruit color={color} sw={sw} cx={20} cy={-7} angle={-22} />
+      <OliveFruit color={color} sw={sw} cx={50} cy={-20} angle={-25} />
+    </g>
+  );
+}
+
+/* Single right-facing branch wrapped in an SVG frame */
+function SingleBranch({ color = GD, sw = 1.0, scale = 1 }) {
+  const W = 100 * scale, H = 58 * scale;
+  return (
+    <svg width={W} height={H} viewBox="0 0 100 58" style={{overflow:'visible'}}>
+      {/* base at (12,50), branch extends upper-right */}
+      <g transform="translate(12,50)">
+        <BranchPaths color={color} sw={sw / scale} />
+      </g>
+    </svg>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   ORIGINAL LOGO — VARIATIONS
+   Infinity ribbon + olive branch mark
+   Tagline: "Italy's taste, crafted for Japan"
+════════════════════════════════════════════════════════ */
+
+const WM = "'Josefin Sans', 'DM Sans', sans-serif"; // thin geometric wordmark font
+
+/* ─ Calligraphic infinity / lemniscate ribbon ─
+   Draws right loop first, occludes at crossing, left loop on top
+   giving the "ribbon passing under itself" effect.              */
+function InfinityRibbon({ color = GD, hilite = GD2, bg = IV, cx = 0, cy = 0, w = 52, h = 19, sw = 6 }) {
+  const right = `M ${cx},${cy} C ${cx+w*.3},${cy-h} ${cx+w},${cy-h} ${cx+w},${cy} C ${cx+w},${cy+h} ${cx+w*.3},${cy+h} ${cx},${cy}`;
+  const left  = `M ${cx},${cy} C ${cx-w*.3},${cy-h} ${cx-w},${cy-h} ${cx-w},${cy} C ${cx-w},${cy+h} ${cx-w*.3},${cy+h} ${cx},${cy}`;
+  return (
+    <g>
+      {/* Right loop — behind */}
+      <path d={right} fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round"/>
+      <path d={right} fill="none" stroke={hilite} strokeWidth={sw*.22} strokeLinecap="round" opacity=".55"/>
+      {/* Occlusion patch at the crossing, so left loop appears on top */}
+      <ellipse cx={cx} cy={cy} rx={sw*.72} ry={sw*.88}
+        fill={bg} transform={`rotate(38 ${cx} ${cy})`}/>
+      {/* Left loop — in front */}
+      <path d={left} fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round"/>
+      <path d={left} fill="none" stroke={hilite} strokeWidth={sw*.22} strokeLinecap="round" opacity=".55"/>
+    </g>
+  );
+}
+
+/* ─ Single filled olive leaf (pointed oval) ─ */
+function FLeaf({ cx = 0, cy = 0, angle = 0, len = 15, wid = 4, color = BK }) {
+  const d = `M 0,0 C ${wid},${-len*.3} ${wid},${-len*.7} 0,${-len} C ${-wid},${-len*.7} ${-wid},${-len*.3} 0,0`;
+  return (
+    <g transform={`translate(${cx},${cy}) rotate(${angle})`}>
+      <path d={d} fill={color}/>
+      {/* Subtle midrib highlight */}
+      <line x1="0" y1="-1.5" x2="0" y2={-len+2.5}
+        stroke="rgba(255,255,255,0.16)" strokeWidth=".55"/>
+    </g>
+  );
+}
+
+/* ─ Filled olive branch growing upward from origin ─ */
+function FilledBranch({ color = BK, s = 1 }) {
+  return (
+    <g transform={`scale(${s})`}>
+      {/* Main stem */}
+      <path d="M 0,0 C -1,-13 -5,-31 -7,-63"
+        stroke={color} strokeWidth="1.1" fill="none" strokeLinecap="round"/>
+      {/* Five pairs of leaves, decreasing in size toward tip */}
+      <FLeaf cx={-1} cy={-9}  angle={-52} len={13} wid={3.8} color={color}/>
+      <FLeaf cx={1}  cy={-11} angle={44}  len={11} wid={3.3} color={color}/>
+      <FLeaf cx={-3} cy={-22} angle={-57} len={15} wid={4.3} color={color}/>
+      <FLeaf cx={1}  cy={-24} angle={37}  len={13} wid={3.8} color={color}/>
+      <FLeaf cx={-5} cy={-35} angle={-61} len={14} wid={4.0} color={color}/>
+      <FLeaf cx={0}  cy={-37} angle={30}  len={12} wid={3.5} color={color}/>
+      <FLeaf cx={-6} cy={-46} angle={-65} len={13} wid={3.7} color={color}/>
+      <FLeaf cx={-1} cy={-48} angle={24}  len={11} wid={3.1} color={color}/>
+      {/* Tip cluster — three leaves */}
+      <FLeaf cx={-7}  cy={-57} angle={-48} len={11} wid={3.1} color={color}/>
+      <FLeaf cx={-3}  cy={-59} angle={-6}  len={12} wid={3.4} color={color}/>
+      <FLeaf cx={-11} cy={-55} angle={-78} len={10} wid={2.9} color={color}/>
+    </g>
+  );
+}
+
+/* ── V1: Classic — faithful to reference, new tagline ── */
+function LogoV1() {
+  const bg = IV;
+  return (
+    <div style={{ width:'100%', height:'100%', background: bg,
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center' }}>
+      <svg width="280" height="120" viewBox="0 0 280 120" style={{overflow:'visible'}}>
+        <g transform="translate(140,94)"><FilledBranch color={BK} s={1}/></g>
+        <InfinityRibbon cx={140} cy={92} w={50} h={19} sw={6} bg={bg}/>
+        <line x1="8"   y1="92" x2="78"  y2="92" stroke={GD} strokeWidth=".85"/>
+        <line x1="202" y1="92" x2="272" y2="92" stroke={GD} strokeWidth=".85"/>
+      </svg>
+      <div style={{ fontFamily: WM, fontWeight: 300, fontSize: 50,
+        letterSpacing: '0.36em', color: BK, textTransform: 'uppercase',
+        lineHeight: 1, marginTop: 14, paddingLeft:'0.36em' }}>
+        Sapore Mio
+      </div>
+      <div style={{ fontFamily: WM, fontSize: 10.5, fontWeight: 400,
+        letterSpacing: '0.22em', color: GD, textTransform: 'uppercase',
+        marginTop: 13, paddingLeft:'0.22em' }}>
+        Italy's taste, crafted for Japan
+      </div>
+      <div style={{ width: 210, height: .75, background: GD, marginTop: 10 }}/>
+    </div>
+  );
+}
+
+/* ── V2: Nocturne — deep warm black, reversed ── */
+function LogoV2() {
+  const bg = '#141410';
+  return (
+    <div style={{ width:'100%', height:'100%', background: bg,
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center' }}>
+      <svg width="280" height="120" viewBox="0 0 280 120" style={{overflow:'visible'}}>
+        <g transform="translate(140,94)"><FilledBranch color={IV} s={1}/></g>
+        <InfinityRibbon cx={140} cy={92} w={50} h={19} sw={6} bg={bg} color={GD} hilite={GD2}/>
+        <line x1="8"   y1="92" x2="78"  y2="92" stroke={GD} strokeWidth=".75" opacity=".7"/>
+        <line x1="202" y1="92" x2="272" y2="92" stroke={GD} strokeWidth=".75" opacity=".7"/>
+      </svg>
+      <div style={{ fontFamily: WM, fontWeight: 300, fontSize: 50,
+        letterSpacing: '0.36em', color: IV, textTransform: 'uppercase',
+        lineHeight: 1, marginTop: 14, paddingLeft:'0.36em' }}>
+        Sapore Mio
+      </div>
+      <div style={{ fontFamily: WM, fontSize: 10.5, fontWeight: 400,
+        letterSpacing: '0.22em', color: GD, textTransform: 'uppercase',
+        marginTop: 13, paddingLeft:'0.22em', opacity: .85 }}>
+        Italy's taste, crafted for Japan
+      </div>
+      <div style={{ width: 210, height: .75, background: GD, marginTop: 10, opacity:.65 }}/>
+    </div>
+  );
+}
+
+/* ── V3: Horizontal — for signage, web headers, menus ── */
+function LogoV3() {
+  const bg = IV;
+  return (
+    <div style={{ width:'100%', height:'100%', background: bg,
+      display:'flex', alignItems:'center', justifyContent:'center',
+      padding:'28px 52px', gap: 0 }}>
+      {/* Left: mark only */}
+      <div style={{ display:'flex', flexDirection:'column',
+        alignItems:'center', flexShrink: 0 }}>
+        <svg width="128" height="128" viewBox="0 0 128 128" style={{overflow:'visible'}}>
+          <g transform="translate(64,100)"><FilledBranch color={BK} s={.88}/></g>
+          <InfinityRibbon cx={64} cy={98} w={44} h={16} sw={5.2} bg={bg}/>
+        </svg>
+      </div>
+      {/* Gold vertical divider */}
+      <div style={{ width: .8, alignSelf:'stretch', background: GD,
+        margin:'20px 44px', opacity:.75, flexShrink: 0 }}/>
+      {/* Right: wordmark + tagline */}
+      <div style={{ display:'flex', flexDirection:'column', gap: 0 }}>
+        <div style={{ fontFamily: WM, fontWeight: 300, fontSize: 58,
+          letterSpacing: '0.28em', color: BK, textTransform: 'uppercase',
+          lineHeight: 0.88, paddingLeft:'0.28em' }}>
+          <div>Sapore</div>
+          <div>Mio</div>
+        </div>
+        <div style={{ height: .75, background: GD, margin:'16px 0 11px' }}/>
+        <div style={{ fontFamily: WM, fontSize: 9.5, fontWeight: 400,
+          letterSpacing: '0.2em', color: GD, textTransform: 'uppercase' }}>
+          Italy's taste, crafted for Japan
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── V4: Serif Italic — same mark, Cormorant wordmark, artisanal feel ── */
+function LogoV4() {
+  const bg = IV;
+  return (
+    <div style={{ width:'100%', height:'100%', background: bg,
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center' }}>
+      <svg width="260" height="110" viewBox="0 0 260 110" style={{overflow:'visible'}}>
+        <g transform="translate(130,86)"><FilledBranch color={BK} s={.92}/></g>
+        <InfinityRibbon cx={130} cy={84} w={46} h={17} sw={5.6} bg={bg}/>
+        <line x1="8"   y1="84" x2="72"  y2="84" stroke={GD} strokeWidth=".8"/>
+        <line x1="188" y1="84" x2="252" y2="84" stroke={GD} strokeWidth=".8"/>
+      </svg>
+      {/* Serif italic wordmark — warmer, more hand-crafted feel */}
+      <div style={{ fontFamily: serif, fontWeight: 300, fontStyle:'italic', fontSize: 60,
+        letterSpacing: '0.06em', color: BK,
+        lineHeight: 1, marginTop: 12 }}>
+        Sapore Mio
+      </div>
+      {/* Tagline in WM sans beneath, gold */}
+      <div style={{ display:'flex', alignItems:'center', gap: 12, marginTop: 14 }}>
+        <div style={{ width: 28, height: .7, background: GD }}/>
+        <div style={{ fontFamily: WM, fontSize: 9.5, fontWeight: 400,
+          letterSpacing: '0.2em', color: GD, textTransform: 'uppercase' }}>
+          Italy's taste, crafted for Japan
+        </div>
+        <div style={{ width: 28, height: .7, background: GD }}/>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   LOGO ARTBOARDS — 4 Olive Branch Directions
+════════════════════════════════════════════════════════ */
+
+/* Logo 1 — Open composition: branch floats above wordmark, no container */
+function LogoA() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center', gap: 0,
+    }}>
+      <SingleBranch scale={1.5} color={GD} sw={1.0} />
+      <div style={{ height: 20 }} />
+      <div style={{
+        fontFamily: serif, fontSize: 58, fontWeight: 300,
+        fontStyle: 'italic', letterSpacing: '0.04em',
+        color: BK, lineHeight: 1, whiteSpace: 'nowrap',
+      }}>Sapore Mio</div>
+      <div style={{ width: 170, height: 0.8, background: GD, margin: '18px 0 0' }} />
+    </div>
+  );
+}
+
+/* Logo 2 — Circle seal: branch at top inside thin ring */
+function LogoB() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <svg width="240" height="240" viewBox="0 0 240 240" style={{overflow:'visible'}}>
+        {/* Outer circle */}
+        <circle cx="120" cy="120" r="108" fill="none" stroke={BK} strokeWidth="0.85"/>
+        {/* Gold inner ring */}
+        <circle cx="120" cy="120" r="94" fill="none" stroke={GD} strokeWidth="0.5"/>
+        {/* Olive branch — centered in top half, base at left, tip at right */}
+        <g transform="translate(52, 98)">
+          <BranchPaths color={BK} sw={0.8} />
+        </g>
+        {/* Wordmark */}
+        <text x="120" y="152" textAnchor="middle"
+          fontFamily="'Cormorant Garamond', Georgia, serif"
+          fontSize="28" fontWeight="300" fontStyle="italic"
+          fill={BK} letterSpacing="1.2">Sapore Mio</text>
+        {/* Gold rule */}
+        <line x1="78" y1="162" x2="162" y2="162" stroke={GD} strokeWidth="0.7"/>
+        {/* Sub-label */}
+        <text x="120" y="176" textAnchor="middle"
+          fontFamily="'DM Sans', sans-serif"
+          fontSize="7" letterSpacing="4.5"
+          fill={BK} opacity="0.4">HANDCRAFTED</text>
+      </svg>
+    </div>
+  );
+}
+
+/* Logo 3 — Oval: classical Italian shape, reversed on black */
+function LogoC() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: BK,
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <svg width="200" height="270" viewBox="0 0 200 270" style={{overflow:'visible'}}>
+        {/* Outer oval */}
+        <ellipse cx="100" cy="135" rx="92" ry="124" fill="none" stroke={IV} strokeWidth="0.85"/>
+        {/* Gold inner oval */}
+        <ellipse cx="100" cy="135" rx="79" ry="111" fill="none" stroke={GD} strokeWidth="0.5"/>
+        {/* Branch in top of oval */}
+        <g transform="translate(34, 82)">
+          <BranchPaths color={IV} sw={0.75} />
+        </g>
+        {/* Gold rule */}
+        <line x1="48" y1="128" x2="152" y2="128" stroke={GD} strokeWidth="0.7"/>
+        {/* Wordmark */}
+        <text x="100" y="164" textAnchor="middle"
+          fontFamily="'Cormorant Garamond', Georgia, serif"
+          fontSize="28" fontWeight="300" fontStyle="italic"
+          fill={IV} letterSpacing="1.2">Sapore Mio</text>
+        {/* Sub-text */}
+        <text x="100" y="188" textAnchor="middle"
+          fontFamily="'DM Sans', sans-serif"
+          fontSize="7" letterSpacing="4.5"
+          fill={GD} opacity="0.85">ITALIA · GIAPPONE</text>
+      </svg>
+    </div>
+  );
+}
+
+/* Logo 4 — Wreath: two mirrored branches above the wordmark */
+function LogoD() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center', gap: 0,
+    }}>
+      <svg width="220" height="90" viewBox="0 0 220 90" style={{overflow:'visible'}}>
+        {/* Right branch: base at center-bottom, extends upper-right */}
+        <g transform="translate(110,78)">
+          <BranchPaths color={BK} sw={0.72} />
+        </g>
+        {/* Left branch: same base, mirrored horizontally (scale(-1,1) is applied first) */}
+        <g transform="translate(110,78) scale(-1,1)">
+          <BranchPaths color={BK} sw={0.72} />
+        </g>
+        {/* Small central diamond where branches meet */}
+        <rect x="107.5" y="75.5" width="5" height="5"
+          transform="rotate(45 110 78)" fill={GD}/>
+      </svg>
+      {/* Gold rule */}
+      <div style={{ width: 180, height: 0.8, background: GD, margin: '14px 0 16px' }} />
+      {/* Wordmark */}
+      <div style={{
+        fontFamily: serif, fontSize: 50, fontWeight: 300,
+        fontStyle: 'italic', letterSpacing: '0.04em',
+        color: BK, lineHeight: 1, whiteSpace: 'nowrap',
+      }}>Sapore Mio</div>
+      {/* Sub-label */}
+      <div style={{
+        fontFamily: sans, fontSize: 8.5, letterSpacing: '0.3em',
+        color: BK, opacity: 0.35, textTransform: 'uppercase',
+        marginTop: 14, whiteSpace: 'nowrap',
+      }}>Handcrafted · Est. 2024</div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   LOGO EXPLORATIONS — bolder, more divergent (round 2)
+   Built around the gold accent only. Each takes a different
+   mark approach + a different layout.
+════════════════════════════════════════════════════════ */
+
+/* Logo E — Monogram Seal
+   Hallmark-stamp circle. Interlocked S+M serif monogram,
+   olive sprig at top inside the ring, curved tagline along
+   the bottom. Ideal as a social avatar, jar cap, wax-seal. */
+function LogoE() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <svg width="260" height="260" viewBox="0 0 260 260" style={{overflow:'visible'}}>
+        <defs>
+          <path id="seal-bottom"
+            d="M 40,130 A 90,90 0 0 0 220,130" fill="none"/>
+          <path id="seal-top"
+            d="M 40,130 A 90,90 0 0 1 220,130" fill="none"/>
+        </defs>
+        {/* Outer thin gold ring */}
+        <circle cx="130" cy="130" r="106" fill="none" stroke={GD} strokeWidth="1"/>
+        {/* Inner hairline black ring */}
+        <circle cx="130" cy="130" r="96"  fill="none" stroke={BK} strokeWidth="0.5"/>
+
+        {/* Tiny olive sprig at the top inside the ring */}
+        <g transform="translate(108,58)">
+          <BranchPaths color={BK} sw={0.6} />
+        </g>
+
+        {/* Interlocked S + M monogram, big serif, italic */}
+        <g>
+          {/* S — black, sits slightly left */}
+          <text x="84" y="172"
+            fontFamily="'Cormorant Garamond', Georgia, serif"
+            fontSize="120" fontWeight="500" fontStyle="italic"
+            fill={BK}>S</text>
+          {/* M — gold, overlaps right side */}
+          <text x="115" y="172"
+            fontFamily="'Cormorant Garamond', Georgia, serif"
+            fontSize="120" fontWeight="500" fontStyle="italic"
+            fill={GD}>M</text>
+        </g>
+
+        {/* Small gold dot bullet markers flanking the monogram baseline */}
+        <circle cx="50" cy="130" r="2" fill={GD}/>
+        <circle cx="210" cy="130" r="2" fill={GD}/>
+
+        {/* Curved tagline along bottom of ring */}
+        <text fontFamily="'DM Sans', sans-serif"
+          fontSize="9" letterSpacing="5" fill={BK} opacity="0.55">
+          <textPath href="#seal-bottom" startOffset="50%" textAnchor="middle">
+            SAPORE · MIO · EST · MMXXIV
+          </textPath>
+        </text>
+      </svg>
+    </div>
+  );
+}
+
+/* Logo F — Editorial Stack
+   No mark. Pure typography, magazine-cover energy.
+   Huge serif display caps, asymmetric left-aligned, tiny
+   gold metadata + thin gold rule. Modern editorial minimal. */
+function LogoF() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', alignItems:'center', justifyContent:'center',
+      padding:'40px 56px',
+    }}>
+      <div style={{ width:'100%', display:'flex', flexDirection:'column' }}>
+        {/* Top meta line */}
+        <div style={{ display:'flex', alignItems:'center', gap:14,
+          marginBottom:18 }}>
+          <div style={{ fontFamily:sans, fontSize:9, letterSpacing:'0.3em',
+            color: GD, textTransform:'uppercase', fontWeight:500 }}>
+            № 01 — Italia
+          </div>
+          <div style={{ flex:1, height:1, background: GD }} />
+          <div style={{ fontFamily:sans, fontSize:9, letterSpacing:'0.3em',
+            color: GD, textTransform:'uppercase', fontWeight:500 }}>
+            MMXXIV
+          </div>
+        </div>
+
+        {/* Display wordmark — stacked, tight */}
+        <div style={{ fontFamily: serif, fontSize: 96, fontWeight: 300,
+          color: BK, lineHeight: 0.88, letterSpacing:'-0.02em',
+          textTransform:'uppercase' }}>
+          Sapore
+        </div>
+        <div style={{ fontFamily: serif, fontSize: 96, fontWeight: 300,
+          fontStyle:'italic',
+          color: BK, lineHeight: 0.95, letterSpacing:'-0.01em',
+          textTransform:'uppercase',
+          marginLeft: 70 }}>
+          Mio
+        </div>
+
+        {/* Bottom meta line */}
+        <div style={{ marginTop: 22, display:'flex',
+          alignItems:'baseline', gap: 16 }}>
+          <div style={{ width: 28, height: 1, background: BK }} />
+          <div style={{ fontFamily: sans, fontSize: 10, fontWeight: 400,
+            letterSpacing:'0.16em', color: BK, opacity:.65,
+            textTransform:'uppercase' }}>
+            Italy's taste, crafted for Japan
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Logo G — Heritage Crest
+   Italian-style escutcheon shield, drawn in confident gold
+   linework. Crossed olive + wheat inside, banner across the
+   middle carrying the wordmark, small year at the point. */
+function LogoG() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <svg width="240" height="300" viewBox="0 0 240 300" style={{overflow:'visible'}}>
+        {/* Shield outline */}
+        <path d="M 40,40 H 200 V 150 C 200,210 170,240 120,268
+                 C 70,240 40,210 40,150 Z"
+          fill="none" stroke={GD} strokeWidth="1.4"/>
+        {/* Inner hairline shield, offset */}
+        <path d="M 50,50 H 190 V 150 C 190,205 165,232 120,256
+                 C 75,232 50,205 50,150 Z"
+          fill="none" stroke={BK} strokeWidth="0.4" opacity="0.5"/>
+
+        {/* Crown of small dots at top */}
+        {[80, 100, 120, 140, 160].map((x, i) => (
+          <circle key={i} cx={x} cy={32} r="1.6" fill={GD}/>
+        ))}
+
+        {/* Crossed olive branch (left) — drawn with our existing parts */}
+        <g transform="translate(56,108) rotate(20)">
+          <BranchPaths color={BK} sw={0.7} />
+        </g>
+        {/* Crossed wheat-stalk (right) — vertical stem with paired grains */}
+        <g transform="translate(140,148) rotate(-30)" stroke={BK}
+           strokeLinecap="round" strokeWidth="0.8" fill="none">
+          {/* stalk */}
+          <line x1="0" y1="0" x2="0" y2="-72"/>
+          {/* grains, in 4 tiers, paired */}
+          {[ -22, -36, -50, -64 ].map((y, i) => (
+            <g key={i}>
+              <ellipse cx="-4" cy={y} rx="3.2" ry="1.6"
+                transform={`rotate(-30 -4 ${y})`} />
+              <ellipse cx="4"  cy={y} rx="3.2" ry="1.6"
+                transform={`rotate(30 4 ${y})`} />
+              {/* awn lines */}
+              <line x1="-6" y1={y-1} x2="-12" y2={y-6} />
+              <line x1="6"  y1={y-1} x2="12"  y2={y-6} />
+            </g>
+          ))}
+          {/* tip grain */}
+          <ellipse cx="0" cy="-72" rx="1.8" ry="3" />
+        </g>
+
+        {/* Banner across the middle */}
+        <g>
+          <path d="M 22,170 L 38,160 L 202,160 L 218,170
+                   L 202,182 L 38,182 Z"
+            fill={BK}/>
+          {/* Banner ends folds */}
+          <path d="M 22,170 L 36,178 L 38,182 Z" fill={GD3}/>
+          <path d="M 218,170 L 204,178 L 202,182 Z" fill={GD3}/>
+        </g>
+        <text x="120" y="176" textAnchor="middle"
+          fontFamily="'DM Sans', sans-serif"
+          fontSize="13" fontWeight="500" letterSpacing="3.2"
+          fill={GD}>SAPORE MIO</text>
+
+        {/* Year mark below banner */}
+        <text x="120" y="222" textAnchor="middle"
+          fontFamily="'Cormorant Garamond', Georgia, serif"
+          fontSize="22" fontWeight="400" fontStyle="italic"
+          fill={BK}>MMXXIV</text>
+
+        {/* Bottom thin gold rule */}
+        <line x1="92" y1="234" x2="148" y2="234"
+          stroke={GD} strokeWidth="0.7"/>
+
+        {/* Tiny tagline at point */}
+        <text x="120" y="248" textAnchor="middle"
+          fontFamily="'DM Sans', sans-serif"
+          fontSize="6.5" letterSpacing="2.4"
+          fill={BK} opacity="0.5">ITALIA · GIAPPONE</text>
+      </svg>
+    </div>
+  );
+}
+
+/* Logo H — Sun Disc
+   Solid gold filled disc with negative-space olive sprig
+   carved out. Modern, iconic, holds up at tiny sizes.
+   Wordmark sits beneath in a calm sans. */
+function LogoH() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center', gap:0,
+    }}>
+      <svg width="170" height="170" viewBox="0 0 170 170" style={{overflow:'visible'}}>
+        <defs>
+          {/* Mask: white = visible gold, black = cut-out */}
+          <mask id="disc-mask">
+            <rect width="170" height="170" fill="white"/>
+            {/* Olive sprig cut-out — uses inverted BranchPaths.
+                Mask works with fill, so we render filled shapes here. */}
+            <g transform="translate(48,108)">
+              {/* Stem as thick path */}
+              <path d="M 0,0 C 18,-7 42,-16 68,-28"
+                stroke="black" strokeWidth="2.6" fill="none"
+                strokeLinecap="round"/>
+              {/* Leaves — filled lanceolate */}
+              {[
+                {x:12,y:-4,r:-65},
+                {x:13,y:-3.5,r:38},
+                {x:27,y:-9,r:-68},
+                {x:28,y:-8.5,r:35},
+                {x:43,y:-16,r:-70},
+                {x:44,y:-15.5,r:33},
+                {x:58,y:-23,r:-72},
+                {x:59,y:-22.5,r:31},
+              ].map((l,i) => (
+                <path key={i}
+                  d="M 0,0 C 2,2.4 12,2.8 18,0 C 12,-2.8 2,-2.4 0,0 Z"
+                  transform={`translate(${l.x},${l.y}) rotate(${l.r})`}
+                  fill="black"/>
+              ))}
+            </g>
+          </mask>
+        </defs>
+
+        {/* Outer hairline circle for definition */}
+        <circle cx="85" cy="85" r="82" fill="none"
+          stroke={GD3} strokeWidth="0.6" opacity="0.5"/>
+        {/* Solid gold disc with sprig cut-out */}
+        <circle cx="85" cy="85" r="78" fill={GD}
+          mask="url(#disc-mask)"/>
+      </svg>
+
+      <div style={{ marginTop: 22, fontFamily: sans, fontSize: 28,
+        fontWeight: 500, letterSpacing:'0.28em', color: BK,
+        textTransform:'uppercase' }}>
+        Sapore Mio
+      </div>
+      <div style={{ marginTop: 10, display:'flex',
+        alignItems:'center', gap: 10 }}>
+        <div style={{ width: 14, height: 1, background: GD }} />
+        <div style={{ fontFamily: sans, fontSize: 8.5,
+          letterSpacing:'0.32em', color: GD, fontWeight: 500,
+          textTransform:'uppercase' }}>
+          Italia · Giappone
+        </div>
+        <div style={{ width: 14, height: 1, background: GD }} />
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   COLOR & TYPE ARTBOARDS
+════════════════════════════════════════════════════════ */
+
+function ColorPalette() {
+  const swatches = [
+    { name:'Ivory', hex:'#FAF7F2', bg: IV, fg: BK, note:'Backgrounds · whitespace' },
+    { name:'Black', hex:'#111111', bg: BK, fg: IV, note:'Text · logo · structure' },
+    { name:'Gold',  hex:'#B08D57', bg: GD, fg: IV, note:'Accent only · ≤10%' },
+  ];
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      display:'flex', flexDirection:'column',
+      padding: '40px 44px', gap: 0,
+    }}>
+      <div style={{ fontFamily: sans, fontSize: 10, letterSpacing:'0.22em',
+        textTransform:'uppercase', color: BK, opacity:.45, marginBottom: 28 }}>
+        Colour System
+      </div>
+      <div style={{ display:'flex', gap: 16, flex:1 }}>
+        {swatches.map(s => (
+          <div key={s.name} style={{
+            flex:1, display:'flex', flexDirection:'column',
+          }}>
+            <div style={{
+              flex:1, background: s.bg, borderRadius: 2,
+              minHeight: 160,
+            }} />
+            <div style={{ paddingTop: 16 }}>
+              <div style={{ fontFamily: serif, fontSize: 22, fontWeight:400,
+                color: BK, letterSpacing:'0.02em' }}>{s.name}</div>
+              <div style={{ fontFamily: sans, fontSize: 11, color: GD,
+                letterSpacing:'0.1em', marginTop:3 }}>{s.hex}</div>
+              <div style={{ fontFamily: sans, fontSize: 10, color: BK,
+                opacity:.5, marginTop:5, letterSpacing:'0.03em' }}>{s.note}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{
+        marginTop: 36, padding: '20px 0', borderTop: `1px solid ${BK}1a`,
+      }}>
+        <div style={{ fontFamily: sans, fontSize: 10, letterSpacing:'0.18em',
+          textTransform:'uppercase', color: BK, opacity:.4, marginBottom: 14 }}>
+          Gold at work
+        </div>
+        <div style={{ display:'flex', gap: 24, alignItems:'center' }}>
+          <div style={{ height:1, flex:1, background: GD }} />
+          <div style={{ width:28, height:28, borderRadius:'50%',
+            border:`1.5px solid ${GD}` }} />
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <polygon points="16,4 18.5,13.5 28,13.5 20.5,19.5 23,29 16,23 9,29 11.5,19.5 4,13.5 13.5,13.5"
+              fill="none" stroke={GD} strokeWidth="1" />
+          </svg>
+          <div style={{ height:1, flex:1, background: GD }} />
+        </div>
+        <div style={{ fontFamily: sans, fontSize: 9, color: BK, opacity:.35,
+          marginTop:10, letterSpacing:'0.12em' }}>
+          Thin rules · circular seals · small accents
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TypographyScale() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: IV,
+      padding: '40px 44px', display:'flex', flexDirection:'column', gap: 0,
+    }}>
+      <div style={{ fontFamily: sans, fontSize: 10, letterSpacing:'0.22em',
+        textTransform:'uppercase', color: BK, opacity:.45, marginBottom: 32 }}>
+        Typography
+      </div>
+
+      {/* H1 */}
+      <div style={{ borderBottom:`1px solid ${BK}12`, paddingBottom:20, marginBottom:20 }}>
+        <div style={{ fontFamily: sans, fontSize: 9, letterSpacing:'0.2em',
+          textTransform:'uppercase', color: GD, marginBottom:10 }}>H1 · Display</div>
+        <div style={{ fontFamily: serif, fontSize: 56, fontWeight:300,
+          fontStyle:'italic', color: BK, lineHeight:1.05, letterSpacing:'0.01em' }}>
+          Sapore Mio
+        </div>
+        <div style={{ fontFamily: sans, fontSize: 9, color: BK, opacity:.35,
+          marginTop:6, letterSpacing:'0.1em' }}>
+          Cormorant Garamond · 300 italic · large headings
+        </div>
+      </div>
+
+      {/* H2 */}
+      <div style={{ borderBottom:`1px solid ${BK}12`, paddingBottom:18, marginBottom:18 }}>
+        <div style={{ fontFamily: sans, fontSize: 9, letterSpacing:'0.2em',
+          textTransform:'uppercase', color: GD, marginBottom:8 }}>H2 · Section</div>
+        <div style={{ fontFamily: serif, fontSize: 30, fontWeight:400,
+          color: BK, letterSpacing:'0.02em', lineHeight:1.1 }}>
+          Italian staples. Japanese freshness.
+        </div>
+        <div style={{ fontFamily: sans, fontSize: 9, color: BK, opacity:.35,
+          marginTop:6, letterSpacing:'0.1em' }}>
+          Cormorant Garamond · 400 roman · section titles
+        </div>
+      </div>
+
+      {/* Eyebrow */}
+      <div style={{ borderBottom:`1px solid ${BK}12`, paddingBottom:16, marginBottom:16 }}>
+        <div style={{ fontFamily: sans, fontSize: 9, letterSpacing:'0.2em',
+          textTransform:'uppercase', color: GD, marginBottom:8 }}>Label · Eyebrow</div>
+        <div style={{ fontFamily: sans, fontSize: 11, fontWeight:400,
+          color: BK, letterSpacing:'0.22em', textTransform:'uppercase' }}>
+          Small-batch · DOP Certified
+        </div>
+      </div>
+
+      {/* Body */}
+      <div>
+        <div style={{ fontFamily: sans, fontSize: 9, letterSpacing:'0.2em',
+          textTransform:'uppercase', color: GD, marginBottom:8 }}>Body Copy</div>
+        <div style={{ fontFamily: sans, fontSize: 13, fontWeight:300,
+          color: BK, lineHeight:1.75, opacity:.75, maxWidth:380 }}>
+          Slow-cooked ragù. Built on San Marzano DOP tomatoes and aged Grana Padano.
+          Ready in minutes — the patience was already done for you.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   PACKAGING ARTBOARDS
+════════════════════════════════════════════════════════ */
+
+/* Sauce Jar Label — Bolognese */
+function JarLabel() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:'#D6D0C8',
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      {/* Jar silhouette */}
+      <div style={{ position:'relative', width:180, height:280 }}>
+        {/* Jar body */}
+        <div style={{
+          position:'absolute', bottom:0, left:'50%', transform:'translateX(-50%)',
+          width:160, height:240, background:'#E8E3DA',
+          borderRadius:'16px 16px 24px 24px',
+          boxShadow:'inset -8px 0 20px rgba(0,0,0,.08), 2px 4px 18px rgba(0,0,0,.15)',
+        }} />
+        {/* Jar neck */}
+        <div style={{
+          position:'absolute', top:20, left:'50%', transform:'translateX(-50%)',
+          width:100, height:36, background:'#D8D3CA',
+          borderRadius:'8px 8px 0 0',
+          boxShadow:'inset -4px 0 10px rgba(0,0,0,.06)',
+        }} />
+        {/* Lid */}
+        <div style={{
+          position:'absolute', top:0, left:'50%', transform:'translateX(-50%)',
+          width:112, height:28, background: BK,
+          borderRadius:'6px 6px 0 0',
+        }} />
+        {/* Label on jar */}
+        <div style={{
+          position:'absolute', bottom:30, left:'50%', transform:'translateX(-50%)',
+          width:138, height:170, background: IV,
+          display:'flex', flexDirection:'column',
+          alignItems:'center', justifyContent:'center',
+          padding:'20px 14px',
+        }}>
+          {/* Gold top rule */}
+          <div style={{ width:80, height:1, background: GD, marginBottom:12 }} />
+          {/* Brand */}
+          <div style={{ fontFamily: sans, fontSize:7.5, letterSpacing:'0.22em',
+            textTransform:'uppercase', color: BK, opacity:.5, marginBottom:8 }}>
+            Sapore Mio
+          </div>
+          {/* Product name */}
+          <div style={{ fontFamily: serif, fontSize:22, fontWeight:400,
+            fontStyle:'italic', color: BK, textAlign:'center',
+            lineHeight:1.1, letterSpacing:'0.02em' }}>
+            Bolognese
+          </div>
+          <div style={{ fontFamily: serif, fontSize:13, fontWeight:300,
+            color: BK, textAlign:'center', marginTop:2 }}>
+            Sauce
+          </div>
+          {/* Gold bottom rule */}
+          <div style={{ width:80, height:1, background: GD, margin:'12px 0 10px' }} />
+          {/* Descriptor */}
+          <div style={{ fontFamily: sans, fontSize:7, letterSpacing:'0.14em',
+            color: BK, opacity:.5, textAlign:'center', lineHeight:1.5 }}>
+            San Marzano DOP<br/>Grana Padano
+          </div>
+          {/* Weight */}
+          <div style={{ fontFamily: sans, fontSize:6.5, color: BK, opacity:.35,
+            marginTop:10, letterSpacing:'0.1em' }}>
+            300 g
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Pasta Box */
+function PastaBox() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:'#C8C3BC',
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <div style={{ position:'relative' }}>
+        {/* Box */}
+        <div style={{
+          width:280, height:110, background: BK,
+          borderRadius:3, boxShadow:'4px 6px 24px rgba(0,0,0,.25)',
+          display:'flex', alignItems:'stretch', overflow:'hidden',
+        }}>
+          {/* Left gold accent strip */}
+          <div style={{ width:4, background: GD, flexShrink:0 }} />
+          {/* Main content area */}
+          <div style={{
+            flex:1, display:'flex', flexDirection:'column',
+            alignItems:'flex-start', justifyContent:'center',
+            padding:'18px 22px',
+          }}>
+            <div style={{ fontFamily: sans, fontSize:7.5, letterSpacing:'0.22em',
+              textTransform:'uppercase', color: GD, marginBottom:8, opacity:.9 }}>
+              Sapore Mio
+            </div>
+            <div style={{ fontFamily: serif, fontSize:28, fontWeight:300,
+              fontStyle:'italic', color: IV, letterSpacing:'0.02em',
+              lineHeight:1.05 }}>
+              Fresh Pasta
+            </div>
+            <div style={{ fontFamily: sans, fontSize:8.5, color: IV,
+              opacity:.45, letterSpacing:'0.14em', marginTop:7,
+              textTransform:'uppercase' }}>
+              Semolina · Durum Wheat · Small-batch
+            </div>
+          </div>
+          {/* Right side — weight badge */}
+          <div style={{
+            width:52, display:'flex', flexDirection:'column',
+            alignItems:'center', justifyContent:'center',
+            borderLeft:`1px solid ${IV}15`,
+          }}>
+            <div style={{ fontFamily: serif, fontSize:18, fontWeight:300,
+              color: GD, lineHeight:1 }}>250</div>
+            <div style={{ fontFamily: sans, fontSize:7, color: IV,
+              opacity:.4, letterSpacing:'0.1em', marginTop:3 }}>g</div>
+          </div>
+        </div>
+        {/* Box top edge */}
+        <div style={{
+          position:'absolute', top:-8, left:8, right:0,
+          height:10, background:'#1c1c1c',
+          borderRadius:'2px 2px 0 0', zIndex:-1,
+          transform:'skewX(-2deg)',
+        }} />
+      </div>
+    </div>
+  );
+}
+
+/* Ready Meal Tray — Lasagna */
+function MealTray() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:'#C8C3BC',
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <div style={{ position:'relative', width:320 }}>
+        {/* Tray */}
+        <div style={{
+          width:'100%', height:130, background:'#e0dbd4',
+          borderRadius:'8px 8px 16px 16px',
+          boxShadow:'inset 0 2px 8px rgba(0,0,0,.1), 2px 6px 20px rgba(0,0,0,.2)',
+          position:'relative', overflow:'hidden',
+        }}>
+          {/* Film/seal area */}
+          <div style={{
+            position:'absolute', inset:0, background:'rgba(230,225,218,.6)',
+            backdropFilter:'blur(1px)',
+          }} />
+          {/* Placeholder food area */}
+          <div style={{
+            position:'absolute', inset:12,
+            background:'rgba(160,130,90,.15)',
+            borderRadius:6,
+            display:'flex', alignItems:'center', justifyContent:'center',
+          }}>
+            <div style={{ fontFamily: sans, fontSize:8, color: BK,
+              opacity:.3, letterSpacing:'0.12em', textTransform:'uppercase' }}>
+              food photography
+            </div>
+          </div>
+        </div>
+        {/* Sleeve label */}
+        <div style={{
+          position:'absolute', top:-50, left:0, right:0,
+          height:56, background: IV,
+          borderRadius:'6px 6px 0 0',
+          display:'flex', alignItems:'center',
+          padding:'0 20px',
+          boxShadow:'0 -2px 10px rgba(0,0,0,.1)',
+        }}>
+          {/* Left: Brand + product */}
+          <div style={{ flex:1 }}>
+            <div style={{ fontFamily: sans, fontSize:7.5, letterSpacing:'0.2em',
+              textTransform:'uppercase', color: BK, opacity:.4 }}>
+              Sapore Mio
+            </div>
+            <div style={{ fontFamily: serif, fontSize:22, fontWeight:400,
+              fontStyle:'italic', color: BK, lineHeight:1.1, marginTop:2 }}>
+              Lasagna
+            </div>
+          </div>
+          {/* Gold rule */}
+          <div style={{ width:1, height:30, background: GD, margin:'0 16px' }} />
+          {/* Right: Details */}
+          <div style={{ textAlign:'right' }}>
+            <div style={{ fontFamily: sans, fontSize:7.5, letterSpacing:'0.14em',
+              color: BK, opacity:.4, lineHeight:1.6 }}>
+              Handcrafted<br/>
+              <span style={{ color: GD, opacity:1 }}>San Marzano DOP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Pesto Jar label variant */
+function PestoJar() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:'#D6D0C8',
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <div style={{ position:'relative', width:180, height:280 }}>
+        <div style={{
+          position:'absolute', bottom:0, left:'50%', transform:'translateX(-50%)',
+          width:160, height:240, background:'#E8E3DA',
+          borderRadius:'16px 16px 24px 24px',
+          boxShadow:'inset -8px 0 20px rgba(0,0,0,.08), 2px 4px 18px rgba(0,0,0,.15)',
+        }} />
+        <div style={{
+          position:'absolute', top:20, left:'50%', transform:'translateX(-50%)',
+          width:100, height:36, background:'#D8D3CA',
+          borderRadius:'8px 8px 0 0',
+        }} />
+        <div style={{
+          position:'absolute', top:0, left:'50%', transform:'translateX(-50%)',
+          width:112, height:28, background: BK,
+          borderRadius:'6px 6px 0 0',
+        }} />
+        <div style={{
+          position:'absolute', bottom:30, left:'50%', transform:'translateX(-50%)',
+          width:138, height:170, background: BK,
+          display:'flex', flexDirection:'column',
+          alignItems:'center', justifyContent:'center',
+          padding:'20px 14px',
+        }}>
+          <div style={{ width:80, height:1, background: GD, marginBottom:12 }} />
+          <div style={{ fontFamily: sans, fontSize:7.5, letterSpacing:'0.22em',
+            textTransform:'uppercase', color: GD, marginBottom:8 }}>
+            Sapore Mio
+          </div>
+          <div style={{ fontFamily: serif, fontSize:22, fontWeight:400,
+            fontStyle:'italic', color: IV, textAlign:'center',
+            lineHeight:1.1 }}>
+            Pesto
+          </div>
+          <div style={{ fontFamily: serif, fontSize:13, fontWeight:300,
+            color: IV, textAlign:'center', marginTop:2 }}>
+            Sauce
+          </div>
+          <div style={{ width:80, height:1, background: GD, margin:'12px 0 10px' }} />
+          <div style={{ fontFamily: sans, fontSize:7, letterSpacing:'0.14em',
+            color: IV, opacity:.5, textAlign:'center', lineHeight:1.5 }}>
+            Bright Basil<br/>Pecorino · No shortcuts
+          </div>
+          <div style={{ fontFamily: sans, fontSize:6.5, color: GD, opacity:.6,
+            marginTop:10, letterSpacing:'0.1em' }}>
+            190 g
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   BUSINESS CARD ARTBOARDS
+════════════════════════════════════════════════════════ */
+
+function CardFront() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:'#D0CBC4',
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      {/* Card */}
+      <div style={{
+        width:340, height:200, background: BK,
+        borderRadius:4, boxShadow:'0 8px 32px rgba(0,0,0,.3)',
+        display:'flex', flexDirection:'column',
+        alignItems:'center', justifyContent:'center',
+        padding:'32px 40px', position:'relative',
+      }}>
+        {/* Corner gold dots */}
+        <div style={{ position:'absolute', top:14, left:14,
+          width:4, height:4, borderRadius:'50%', background: GD }} />
+        <div style={{ position:'absolute', top:14, right:14,
+          width:4, height:4, borderRadius:'50%', background: GD }} />
+        <div style={{ position:'absolute', bottom:14, left:14,
+          width:4, height:4, borderRadius:'50%', background: GD }} />
+        <div style={{ position:'absolute', bottom:14, right:14,
+          width:4, height:4, borderRadius:'50%', background: GD }} />
+        {/* Wordmark */}
+        <div style={{ fontFamily: serif, fontSize:38, fontWeight:300,
+          fontStyle:'italic', color: IV, letterSpacing:'0.04em',
+          lineHeight:1, userSelect:'none' }}>
+          Sapore Mio
+        </div>
+        {/* Gold rule */}
+        <div style={{ width:140, height:1, background: GD, margin:'14px 0 12px' }} />
+        {/* Tagline */}
+        <div style={{ fontFamily: sans, fontSize:9, letterSpacing:'0.22em',
+          color: GD, textTransform:'uppercase', fontWeight:400 }}>
+          Italia · Giappone
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CardBack() {
+  return (
+    <div style={{
+      width:'100%', height:'100%', background:'#D0CBC4',
+      display:'flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <div style={{
+        width:340, height:200, background: IV,
+        borderRadius:4, boxShadow:'0 8px 32px rgba(0,0,0,.2)',
+        display:'flex', padding:'28px 36px',
+        position:'relative', overflow:'hidden',
+      }}>
+        {/* Thin gold left border */}
+        <div style={{
+          position:'absolute', left:0, top:0, bottom:0,
+          width:3, background: GD,
+        }} />
+        {/* Content */}
+        <div style={{ display:'flex', flexDirection:'column',
+          justifyContent:'space-between', flex:1 }}>
+          {/* Name & role */}
+          <div>
+            <div style={{ fontFamily: serif, fontSize:20, fontWeight:400,
+              color: BK, letterSpacing:'0.02em' }}>
+              [Founder Name]
+            </div>
+            <div style={{ fontFamily: sans, fontSize:9.5, letterSpacing:'0.14em',
+              color: BK, opacity:.4, marginTop:4, textTransform:'uppercase' }}>
+              Founder & Head of Kitchen
+            </div>
+          </div>
+          {/* Contact details */}
+          <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+            {[
+              { label:'Web',   val:'saporemio.jp' },
+              { label:'Email', val:'info@saporemio.jp' },
+              { label:'Tel',   val:'+81 · ' },
+            ].map(r => (
+              <div key={r.label} style={{ display:'flex', gap:10, alignItems:'baseline' }}>
+                <div style={{ fontFamily: sans, fontSize:7.5, letterSpacing:'0.18em',
+                  textTransform:'uppercase', color: GD, width:36, flexShrink:0 }}>
+                  {r.label}
+                </div>
+                <div style={{ fontFamily: sans, fontSize:10, color: BK,
+                  opacity:.6, letterSpacing:'0.04em' }}>
+                  {r.val}
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Small wordmark */}
+          <div style={{ fontFamily: serif, fontSize:13, fontWeight:300,
+            fontStyle:'italic', color: BK, opacity:.25, letterSpacing:'0.04em' }}>
+            Sapore Mio
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   VOICE & MESSAGING ARTBOARD
+════════════════════════════════════════════════════════ */
+function VoiceBoard() {
+  const lines = [
+    'Italy\'s taste. Crafted for Japan.',
+    'Handcrafted. Small-batch. No shortcuts.',
+    'Italian staples. Japanese freshness. One dish.',
+    'Real Italian food. Delivered.',
+    'We don\'t do Italian-inspired. We do Italian.',
+    'Born in Italy. Made for your table.',
+  ];
+  return (
+    <div style={{
+      width:'100%', height:'100%', background: BK,
+      padding:'40px 48px', display:'flex', flexDirection:'column', gap:0,
+    }}>
+      <div style={{ fontFamily: sans, fontSize:9.5, letterSpacing:'0.22em',
+        textTransform:'uppercase', color: GD, marginBottom:28, opacity:.8 }}>
+        Brand Voice
+      </div>
+      <div style={{ display:'flex', flexDirection:'column', gap:0, flex:1 }}>
+        {lines.map((l, i) => (
+          <div key={i} style={{
+            padding:'18px 0',
+            borderBottom:`1px solid ${IV}10`,
+            fontFamily: serif, fontSize: i === 0 ? 28 : 20,
+            fontWeight: i === 0 ? 400 : 300,
+            fontStyle: i % 2 === 0 ? 'italic' : 'normal',
+            color: i === 0 ? IV : `rgba(250,247,242,${0.45 + (5-i)*0.08})`,
+            lineHeight: 1.2, letterSpacing:'0.01em',
+          }}>
+            {l}
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop:24, paddingTop:20, borderTop:`1px solid ${GD}40` }}>
+        <div style={{ fontFamily: sans, fontSize:9, color: GD, opacity:.7,
+          letterSpacing:'0.16em', textTransform:'uppercase' }}>
+          Minimal · Confident · Honest
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════
+   ROOT LAYOUT
+════════════════════════════════════════════════════════ */
+function App() {
+  return (
+    <DesignCanvas title="Sapore Mio — Brand Identity">
+      {/* ── SECTION 0: Original Logo — Variations ──────── */}
+      <DCSection id="s0" title="Original Logo — Variations">
+        <DCArtboard id="v1" label="V1 · Classic — Ivory, new tagline" width={540} height={360}>
+          <LogoV1 />
+        </DCArtboard>
+        <DCArtboard id="v2" label="V2 · Nocturne — Dark background" width={540} height={360}>
+          <LogoV2 />
+        </DCArtboard>
+        <DCArtboard id="v3" label="V3 · Horizontal — Signage / Web" width={620} height={280}>
+          <LogoV3 />
+        </DCArtboard>
+        <DCArtboard id="v4" label="V4 · Serif — Cormorant wordmark" width={540} height={360}>
+          <LogoV4 />
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── SECTION 1: Logo System ──────────────────────── */}
+      <DCSection id="s1" title="Logo System">
+        <DCArtboard id="a1" label="A · Open — Branch + Wordmark" width={380} height={300}>
+          <LogoA />
+        </DCArtboard>
+        <DCArtboard id="a2" label="B · Circle Seal" width={300} height={300}>
+          <LogoB />
+        </DCArtboard>
+        <DCArtboard id="a3" label="C · Oval — Reversed" width={270} height={340}>
+          <LogoC />
+        </DCArtboard>
+        <DCArtboard id="a4" label="D · Wreath — Symmetrical" width={360} height={300}>
+          <LogoD />
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── SECTION 1b: Logo Explorations — bolder/divergent ── */}
+      <DCSection id="s1b" title="Logo Explorations">
+        <DCArtboard id="e1" label="E · Monogram Seal — Hallmark Stamp" width={340} height={340}>
+          <LogoE />
+        </DCArtboard>
+        <DCArtboard id="e2" label="F · Editorial Stack — Pure Typography" width={520} height={340}>
+          <LogoF />
+        </DCArtboard>
+        <DCArtboard id="e3" label="G · Heritage Crest — Olive + Wheat" width={340} height={400}>
+          <LogoG />
+        </DCArtboard>
+        <DCArtboard id="e4" label="H · Sun Disc — Negative Space" width={340} height={400}>
+          <LogoH />
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── SECTION 2: Visual Language ──────────────────── */}
+      <DCSection id="s2" title="Visual Language">
+        <DCArtboard id="b1" label="Colour Palette" width={520} height={380}>
+          <ColorPalette />
+        </DCArtboard>
+        <DCArtboard id="b2" label="Typography Scale" width={480} height={380}>
+          <TypographyScale />
+        </DCArtboard>
+        <DCArtboard id="b3" label="Brand Voice" width={440} height={380}>
+          <VoiceBoard />
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── SECTION 3: Packaging ───────────────────────── */}
+      <DCSection id="s3" title="Packaging System">
+        <DCArtboard id="c1" label="Bolognese Sauce — Jar Label" width={300} height={380}>
+          <JarLabel />
+        </DCArtboard>
+        <DCArtboard id="c2" label="Pesto Sauce — Black Jar" width={300} height={380}>
+          <PestoJar />
+        </DCArtboard>
+        <DCArtboard id="c3" label="Fresh Pasta — Box" width={440} height={280}>
+          <PastaBox />
+        </DCArtboard>
+        <DCArtboard id="c4" label="Lasagna — Ready Meal Tray" width={440} height={280}>
+          <MealTray />
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── SECTION 4: Stationery ──────────────────────── */}
+      <DCSection id="s4" title="Stationery">
+        <DCArtboard id="d1" label="Business Card — Front" width={440} height={290}>
+          <CardFront />
+        </DCArtboard>
+        <DCArtboard id="d2" label="Business Card — Back" width={440} height={290}>
+          <CardBack />
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
